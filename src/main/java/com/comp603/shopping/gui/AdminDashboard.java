@@ -5,8 +5,12 @@ import com.comp603.shopping.dao.ProductDAO;
 import com.comp603.shopping.models.Order;
 import com.comp603.shopping.models.Product;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class AdminDashboard extends JPanel {
@@ -49,9 +53,24 @@ public class AdminDashboard extends JPanel {
         JPanel panel = new JPanel(new BorderLayout());
 
         // Table
-        String[] columnNames = { "ID", "Name", "Price", "Stock", "Type" };
-        productTableModel = new DefaultTableModel(columnNames, 0);
+        String[] columnNames = { "Image", "ID", "Name", "Price", "Stock" };
+        productTableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 0)
+                    return ImageIcon.class;
+                return Object.class;
+            }
+        };
         productTable = new JTable(productTableModel);
+        productTable.setRowHeight(60);
+        productTable.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
+
         loadProducts();
 
         panel.add(new JScrollPane(productTable), BorderLayout.CENTER);
@@ -85,8 +104,8 @@ public class AdminDashboard extends JPanel {
         deleteButton.addActionListener(e -> {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow >= 0) {
-                int productId = (int) productTableModel.getValueAt(selectedRow, 0);
-                // Placeholder for delete logic - ideally ProductDAO should have deleteProduct
+                int productId = (int) productTableModel.getValueAt(selectedRow, 1); // ID is at index 1 now
+                // Placeholder for delete logic
                 JOptionPane.showMessageDialog(this,
                         "Delete Product ID: " + productId + " (Not implemented in DAO yet)");
             } else {
@@ -97,8 +116,8 @@ public class AdminDashboard extends JPanel {
         editButton.addActionListener(e -> {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow >= 0) {
-                int productId = (int) productTableModel.getValueAt(selectedRow, 0);
-                // Find product object (inefficient but works for now)
+                int productId = (int) productTableModel.getValueAt(selectedRow, 1); // ID is at index 1 now
+                // Find product object
                 List<Product> products = productDAO.getAllProducts();
                 Product selectedProduct = products.stream().filter(p -> p.getProductId() == productId).findFirst()
                         .orElse(null);
@@ -127,9 +146,18 @@ public class AdminDashboard extends JPanel {
         JPanel panel = new JPanel(new BorderLayout());
 
         // Table
-        String[] columnNames = { "Order ID", "Customer", "Total Amount", "Status", "Date" };
-        orderTableModel = new DefaultTableModel(columnNames, 0);
+        String[] columnNames = { "Order ID", "Customer", "Total Amount", "Status", "Date", "Action" };
+        orderTableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 5; // Action column is editable for button click
+            }
+        };
         orderTable = new JTable(orderTableModel);
+
+        orderTable.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        orderTable.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox()));
+
         loadOrders();
 
         panel.add(new JScrollPane(orderTable), BorderLayout.CENTER);
@@ -169,12 +197,23 @@ public class AdminDashboard extends JPanel {
         productTableModel.setRowCount(0);
         List<Product> products = productDAO.getAllProducts();
         for (Product p : products) {
+            // Load Image
+            ImageIcon icon = null;
+            if (p.getImagePath() != null) {
+                java.io.File imgFile = new java.io.File(p.getImagePath());
+                if (imgFile.exists()) {
+                    ImageIcon originalIcon = new ImageIcon(p.getImagePath());
+                    Image img = originalIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                    icon = new ImageIcon(img);
+                }
+            }
+
             Object[] row = {
+                    icon,
                     p.getProductId(),
                     p.getName(),
                     p.getPrice(),
-                    p.getStockQuantity(),
-                    p instanceof com.comp603.shopping.models.PhysicalProduct ? "Physical" : "Digital"
+                    p.getStockQuantity()
             };
             productTableModel.addRow(row);
         }
@@ -189,9 +228,88 @@ public class AdminDashboard extends JPanel {
                     o.getCustomerName(),
                     o.getTotalAmount(),
                     o.getStatus(),
-                    o.getOrderDate()
+                    o.getOrderDate(),
+                    "View Details"
             };
             orderTableModel.addRow(row);
+        }
+    }
+
+    // --- Renderers and Editors ---
+
+    class ImageRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            JLabel label = new JLabel();
+            label.setHorizontalAlignment(JLabel.CENTER);
+            if (value instanceof ImageIcon) {
+                label.setIcon((ImageIcon) value);
+            } else {
+                label.setText("No Image");
+            }
+            return label;
+        }
+    }
+
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+
+    class ButtonEditor extends DefaultCellEditor {
+        protected JButton button;
+        private String label;
+        private boolean isPushed;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+                int column) {
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            isPushed = true;
+            return button;
+        }
+
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                int row = orderTable.getSelectedRow();
+                int orderId = (int) orderTableModel.getValueAt(row, 0);
+
+                // Find Order Object
+                Order selectedOrder = orderDAO.getAllOrders().stream()
+                        .filter(o -> o.getOrderId() == orderId)
+                        .findFirst()
+                        .orElse(null);
+
+                if (selectedOrder != null) {
+                    new OrderDetailDialog(mainFrame, selectedOrder).setVisible(true);
+                }
+            }
+            isPushed = false;
+            return label;
+        }
+
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
         }
     }
 }

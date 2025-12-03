@@ -24,7 +24,7 @@ public class ProductListPanel extends JPanel {
         productContainer.setBackground(Color.WHITE);
         productContainer.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        loadProducts();
+        refreshProducts();
 
         // Scroll Pane
         JScrollPane scrollPane = new JScrollPane(productContainer);
@@ -51,7 +51,7 @@ public class ProductListPanel extends JPanel {
         productContainer.repaint();
     }
 
-    private void loadProducts() {
+    public void refreshProducts() {
         List<Product> productList = productDAO.getAllProducts();
         updateProductList(productList);
     }

@@ -151,11 +151,11 @@ public class CheckoutPanel extends JPanel {
         order.setStatus("PAID");
 
         List<OrderItem> orderItems = new ArrayList<>();
-        for (Product p : mainFrame.getCart().getItems()) {
+        for (com.comp603.shopping.models.CartItem cartItem : mainFrame.getCart().getItems()) {
             OrderItem item = new OrderItem();
-            item.setProductId(p.getProductId());
-            item.setQuantity(1); // Simplified: 1 unit per add
-            item.setPriceAtPurchase(p.getPrice());
+            item.setProductId(cartItem.getProduct().getProductId());
+            item.setQuantity(cartItem.getQuantity());
+            item.setPriceAtPurchase(cartItem.getProduct().getPrice());
             orderItems.add(item);
         }
         order.setItems(orderItems);
@@ -164,10 +164,20 @@ public class CheckoutPanel extends JPanel {
         if (orderDAO.createOrder(order)) {
             // Update Stock
             ProductDAO productDAO = new ProductDAO();
-            for (Product p : mainFrame.getCart().getItems()) {
-                productDAO.updateStock(p.getProductId(), p.getStockQuantity() - 1);
+            boolean stockUpdated = true;
+            for (com.comp603.shopping.models.CartItem cartItem : mainFrame.getCart().getItems()) {
+                if (!productDAO.decreaseStock(cartItem.getProduct().getProductId(), cartItem.getQuantity())) {
+                    stockUpdated = false;
+                    // Ideally rollback order here, but for simplicity just flag error
+                    System.err.println("Failed to decrease stock for product: " + cartItem.getProduct().getName());
+                }
             }
-            return true;
+
+            if (stockUpdated) {
+                mainFrame.refreshView();
+                return true;
+            }
+            return false; // Or partial success handling
         }
         return false;
     }

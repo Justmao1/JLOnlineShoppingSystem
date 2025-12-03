@@ -70,7 +70,8 @@ public class MainFrame extends JFrame {
             cart.setUserId(authService.getCurrentUser().getUserId());
 
             headerPanel.updateUser(authService.getCurrentUser().getUsername());
-            headerPanel.updateCartCount(cart.getItems().size());
+            headerPanel.updateCartCount(
+                    cart.getItems().stream().mapToInt(com.comp603.shopping.models.CartItem::getQuantity).sum());
             headerPanel.setVisible(true);
 
             showCard("PRODUCTS");
@@ -114,6 +115,14 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public void refreshView() {
+        for (Component comp : mainPanel.getComponents()) {
+            if (comp instanceof ProductListPanel) {
+                ((ProductListPanel) comp).refreshProducts();
+            }
+        }
+    }
+
     // Inner Class for Header
     private class HeaderPanel extends JPanel {
         private JLabel welcomeLabel;
@@ -134,9 +143,19 @@ public class MainFrame extends JFrame {
             // Center: Search Bar
             JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             searchPanel.setOpaque(false);
+
+            JButton homeButton = new JButton("🏠");
+            homeButton.setToolTipText("Home");
+            homeButton.setFocusPainted(false);
+            homeButton.addActionListener(e -> {
+                showCard("PRODUCTS");
+                refreshView();
+            });
+
             searchField = new JTextField(20);
             JButton searchButton = new JButton("Search");
 
+            searchPanel.add(homeButton);
             searchPanel.add(searchField);
             searchPanel.add(searchButton);
             add(searchPanel, BorderLayout.CENTER);

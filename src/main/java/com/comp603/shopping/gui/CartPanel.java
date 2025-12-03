@@ -66,8 +66,9 @@ public class CartPanel extends JPanel {
 
     private void refreshCart() {
         tableModel.setRowCount(0);
-        java.util.List<Product> items = mainFrame.getCart().getItems();
-        for (Product p : items) {
+        java.util.List<com.comp603.shopping.models.CartItem> items = mainFrame.getCart().getItems();
+        for (com.comp603.shopping.models.CartItem item : items) {
+            Product p = item.getProduct();
             Object[] row = {
                     p.getName(),
                     String.format("$%.2f", p.getPrice()),

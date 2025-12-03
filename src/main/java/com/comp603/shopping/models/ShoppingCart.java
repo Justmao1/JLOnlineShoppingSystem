@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingCart {
-    private List<Product> items;
+    private List<CartItem> items;
     private int userId;
     private com.comp603.shopping.dao.ShoppingCartDAO cartDAO;
 
@@ -29,7 +29,14 @@ public class ShoppingCart {
             cartDAO.addToCart(userId, product.getProductId(), 1);
             loadItemsFromDB(); // Reload to get fresh state
         } else {
-            items.add(product); // Fallback for guest/testing
+            // Fallback for guest/testing
+            for (CartItem item : items) {
+                if (item.getProduct().getProductId() == product.getProductId()) {
+                    item.setQuantity(item.getQuantity() + 1);
+                    return;
+                }
+            }
+            items.add(new CartItem(product, 1));
         }
     }
 
@@ -38,11 +45,11 @@ public class ShoppingCart {
             cartDAO.removeFromCart(userId, product.getProductId());
             loadItemsFromDB();
         } else {
-            items.remove(product);
+            items.removeIf(item -> item.getProduct().getProductId() == product.getProductId());
         }
     }
 
-    public List<Product> getItems() {
+    public List<CartItem> getItems() {
         if (userId > 0) {
             loadItemsFromDB(); // Ensure fresh data
         }
@@ -50,7 +57,7 @@ public class ShoppingCart {
     }
 
     public double getTotal() {
-        return items.stream().mapToDouble(Product::getPrice).sum();
+        return items.stream().mapToDouble(CartItem::getTotalPrice).sum();
     }
 
     public void clear() {

@@ -101,6 +101,13 @@ public class ProductCard extends JPanel {
         JButton addToCartButton = new JButton("Add to Cart");
         addToCartButton.setBackground(new Color(255, 165, 0)); // Orange
         addToCartButton.setFocusPainted(false);
+
+        if (product.getStockQuantity() <= 0) {
+            addToCartButton.setText("Out of Stock");
+            addToCartButton.setEnabled(false);
+            addToCartButton.setBackground(Color.GRAY);
+        }
+
         addToCartButton.addActionListener(e -> {
             mainFrame.getCart().addProduct(product);
             mainFrame.updateCartCount();

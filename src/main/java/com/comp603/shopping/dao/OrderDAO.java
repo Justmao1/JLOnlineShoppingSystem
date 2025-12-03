@@ -178,4 +178,43 @@ public class OrderDAO {
             return false;
         }
     }
+
+    public java.util.List<OrderItem> getOrderDetails(int orderId) {
+        java.util.List<OrderItem> items = new java.util.ArrayList<>();
+        String sql = "SELECT oi.*, p.NAME, p.IMAGE_PATH, p.PRICE FROM ORDER_ITEMS oi " +
+                "JOIN PRODUCTS p ON oi.PRODUCT_ID = p.PRODUCT_ID " +
+                "WHERE oi.ORDER_ID = ?";
+
+        try (Connection conn = DBManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, orderId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                OrderItem item = new OrderItem();
+                item.setItemId(rs.getInt("ITEM_ID"));
+                item.setOrderId(rs.getInt("ORDER_ID"));
+                item.setProductId(rs.getInt("PRODUCT_ID"));
+                item.setQuantity(rs.getInt("QUANTITY"));
+                item.setPriceAtPurchase(rs.getDouble("PRICE_AT_PURCHASE"));
+
+                // Populate Product object for display
+                com.comp603.shopping.models.Product product = new com.comp603.shopping.models.PhysicalProduct(
+                        rs.getInt("PRODUCT_ID"),
+                        rs.getString("NAME"),
+                        "", // Description not needed
+                        rs.getDouble("PRICE"), // Current price, though we use priceAtPurchase for calc
+                        0, // Stock not needed
+                        0, // Weight not needed
+                        rs.getString("IMAGE_PATH"));
+                item.setProduct(product);
+
+                items.add(item);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return items;
+    }
 }
