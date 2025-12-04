@@ -157,6 +157,7 @@ public class MainFrame extends JFrame {
                 ProductListPanel panel = (ProductListPanel) comp;
                 com.comp603.shopping.dao.ProductDAO dao = new com.comp603.shopping.dao.ProductDAO();
                 panel.updateProductList(dao.searchProducts(keyword));
+                panel.setCarouselVisible(false);
                 // Clear the search field after performing search
                 headerPanel.clearSearchField();
                 return;
