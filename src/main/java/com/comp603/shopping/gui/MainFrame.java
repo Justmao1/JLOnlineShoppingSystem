@@ -86,10 +86,10 @@ public class MainFrame extends JFrame {
         return authService.getCurrentUser() != null;
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(boolean isAdminView) {
         // Initialize other panels after login to ensure data is fresh
 
-        if ("ADMIN".equalsIgnoreCase(authService.getCurrentUser().getRole())) {
+        if (isAdminView && "ADMIN".equalsIgnoreCase(authService.getCurrentUser().getRole())) {
             AdminDashboard adminDashboard = new AdminDashboard(this);
             mainPanel.add(adminDashboard, "ADMIN_DASHBOARD");
             showCard("ADMIN_DASHBOARD");

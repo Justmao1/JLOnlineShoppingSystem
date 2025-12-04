@@ -86,7 +86,7 @@ public class LoginPanel extends JPanel {
                 if (isAdminLogin) {
                     if ("ADMIN".equalsIgnoreCase(currentUser.getRole())) {
                         JOptionPane.showMessageDialog(this, "Admin Login Successful!");
-                        mainFrame.onLoginSuccess();
+                        mainFrame.onLoginSuccess(true);
                     } else {
                         JOptionPane.showMessageDialog(this, "Access Denied: You are not an Admin.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
@@ -98,10 +98,10 @@ public class LoginPanel extends JPanel {
                         // Optional: Allow admins to login as customers or warn them?
                         // For now, let's allow it but they see customer view.
                         JOptionPane.showMessageDialog(this, "Login Successful (Customer View)");
-                        mainFrame.onLoginSuccess();
+                        mainFrame.onLoginSuccess(false);
                     } else {
                         JOptionPane.showMessageDialog(this, "Login Successful!");
-                        mainFrame.onLoginSuccess();
+                        mainFrame.onLoginSuccess(false);
                     }
                 }
             } else {
