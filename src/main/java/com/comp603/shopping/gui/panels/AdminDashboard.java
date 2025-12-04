@@ -95,11 +95,14 @@ public class AdminDashboard extends JPanel {
             ProductDialog dialog = new ProductDialog(mainFrame, null);
             dialog.setVisible(true);
             if (dialog.isConfirmed()) {
-                if (productDAO.addProduct(dialog.getProduct())) {
+                try {
+                    productDAO.addProduct(dialog.getProduct());
                     loadProducts();
                     JOptionPane.showMessageDialog(this, "Product added!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Failed to add product.");
+                } catch (java.sql.SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Failed to add product: " + ex.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -112,12 +115,14 @@ public class AdminDashboard extends JPanel {
                         "Are you sure you want to delete Product ID: " + productId + "?", "Confirm Delete",
                         JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    if (productDAO.deleteProduct(productId)) {
+                    try {
+                        productDAO.deleteProduct(productId);
                         loadProducts();
                         JOptionPane.showMessageDialog(this, "Product deleted successfully.");
-                    } else {
+                    } catch (java.sql.SQLException ex) {
+                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(this,
-                                "Failed to delete product. It might be referenced in orders.", "Error",
+                                "Failed to delete product: " + ex.getMessage(), "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -139,11 +144,14 @@ public class AdminDashboard extends JPanel {
                     ProductDialog dialog = new ProductDialog(mainFrame, selectedProduct);
                     dialog.setVisible(true);
                     if (dialog.isConfirmed()) {
-                        if (productDAO.updateProduct(dialog.getProduct())) {
+                        try {
+                            productDAO.updateProduct(dialog.getProduct());
                             loadProducts();
                             JOptionPane.showMessageDialog(this, "Product updated!");
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Failed to update product.");
+                        } catch (java.sql.SQLException ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(this, "Failed to update product: " + ex.getMessage(), "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }

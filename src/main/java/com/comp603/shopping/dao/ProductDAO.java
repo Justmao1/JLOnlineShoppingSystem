@@ -101,7 +101,7 @@ public class ProductDAO {
         return products;
     }
 
-    public boolean addProduct(Product product) {
+    public void addProduct(Product product) throws SQLException {
         String sql = "INSERT INTO PRODUCTS (NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -114,14 +114,11 @@ public class ProductDAO {
             pstmt.setInt(6, product.getSalesVolume());
             pstmt.setString(7, product.getImagePath());
 
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            pstmt.executeUpdate();
         }
     }
 
-    public boolean updateProduct(Product product) {
+    public void updateProduct(Product product) throws SQLException {
         String sql = "UPDATE PRODUCTS SET NAME = ?, DESCRIPTION = ?, PRICE = ?, STOCK_QUANTITY = ?, CATEGORY = ?, IMAGE_PATH = ? WHERE PRODUCT_ID = ?";
         try (Connection conn = DBManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -134,23 +131,17 @@ public class ProductDAO {
             pstmt.setString(6, product.getImagePath());
             pstmt.setInt(7, product.getProductId());
 
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            pstmt.executeUpdate();
         }
     }
 
-    public boolean deleteProduct(int productId) {
+    public void deleteProduct(int productId) throws SQLException {
         String sql = "DELETE FROM PRODUCTS WHERE PRODUCT_ID = ?";
         try (Connection conn = DBManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, productId);
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            pstmt.executeUpdate();
         }
     }
 }
