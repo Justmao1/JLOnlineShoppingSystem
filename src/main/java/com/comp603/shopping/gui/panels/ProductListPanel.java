@@ -51,7 +51,16 @@ public class ProductListPanel extends JPanel {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBackground(Color.WHITE);
         contentPanel.add(carouselPanel);
+        
+        // Add some vertical spacing between carousel and sort panel
+        contentPanel.add(Box.createVerticalStrut(10));
         contentPanel.add(sortPanel);
+        
+        // Add smaller vertical spacing between sort panel and products
+        JPanel spacer = new JPanel();
+        spacer.setBackground(Color.WHITE);
+        spacer.setMaximumSize(new Dimension(Integer.MAX_VALUE, 5)); // Reduced from 10 to 5
+        contentPanel.add(spacer);
         
         // Wrap the product container in a panel that will expand
         JPanel productWrapper = new JPanel(new BorderLayout());
