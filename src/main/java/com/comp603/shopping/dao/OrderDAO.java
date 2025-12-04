@@ -200,14 +200,16 @@ public class OrderDAO {
                 item.setPriceAtPurchase(rs.getDouble("PRICE_AT_PURCHASE"));
 
                 // Populate Product object for display
-                com.comp603.shopping.models.Product product = new com.comp603.shopping.models.PhysicalProduct(
+                com.comp603.shopping.models.Product product = new com.comp603.shopping.models.Product(
                         rs.getInt("PRODUCT_ID"),
                         rs.getString("NAME"),
                         "", // Description not needed
                         rs.getDouble("PRICE"), // Current price, though we use priceAtPurchase for calc
                         0, // Stock not needed
-                        0, // Weight not needed
-                        rs.getString("IMAGE_PATH"));
+                        rs.getString("IMAGE_PATH"),
+                        "", // Category not needed for order details
+                        0 // Sales Volume not needed
+                );
                 item.setProduct(product);
 
                 items.add(item);
