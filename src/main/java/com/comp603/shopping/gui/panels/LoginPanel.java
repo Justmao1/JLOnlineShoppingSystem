@@ -20,7 +20,7 @@ public class LoginPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titleLabel = new JLabel("Welcome to Online Store");
+        JLabel titleLabel = new JLabel("Welcome to JL Online Store");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;

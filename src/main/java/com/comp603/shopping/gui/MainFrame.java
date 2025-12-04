@@ -186,7 +186,7 @@ public class MainFrame extends JFrame {
             setBorder(new EmptyBorder(10, 20, 10, 20));
 
             // Left: Title
-            JLabel titleLabel = new JLabel("CyberShop");
+            JLabel titleLabel = new JLabel("JL Online Store");
             titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
             titleLabel.setForeground(Color.WHITE);
 
