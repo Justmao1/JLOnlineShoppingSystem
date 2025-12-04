@@ -68,6 +68,9 @@ public class UserDAO {
     }
 
     public boolean registerUser(String username, String password) {
+        if (getUserByUsername(username) != null) {
+            return false; // Username already exists
+        }
         String sql = "INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, ROLE, BALANCE) VALUES (?, ?, ?, 'CUSTOMER', 0.0)";
         try (Connection conn = DBManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {

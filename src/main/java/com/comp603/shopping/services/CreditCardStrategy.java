@@ -17,8 +17,10 @@ public class CreditCardStrategy implements PaymentStrategy {
     @Override
     public boolean pay(double amount) {
         // In a real app, we would validate with a bank API.
-        // Here we simulate success if card number is not empty.
-        if (cardNumber != null && !cardNumber.isEmpty()) {
+        // Here we simulate success if all fields are provided
+        if (cardNumber != null && !cardNumber.isEmpty() &&
+            cvv != null && !cvv.isEmpty() &&
+            dateOfExpiry != null && !dateOfExpiry.isEmpty()) {
             System.out.println(amount + " paid with credit/debit card.");
             return true;
         }

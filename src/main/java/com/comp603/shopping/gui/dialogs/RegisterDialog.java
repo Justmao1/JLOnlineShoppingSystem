@@ -68,7 +68,7 @@ public class RegisterDialog extends JDialog {
 
         // Actions
         cancelButton.addActionListener(e -> dispose());
-        
+
         backButton.addActionListener(e -> {
             dispose();
             // Show login panel when back button is clicked
@@ -87,6 +87,31 @@ public class RegisterDialog extends JDialog {
 
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Username Validation
+        // Length: 4-20, Start with Letter, Alphanumeric + _ -, No spaces
+        if (!username.matches("^[a-zA-Z][a-zA-Z0-9_-]{3,19}$")) {
+            JOptionPane.showMessageDialog(this,
+                    "Invalid Username!\n" +
+                            "- Must be 4-20 characters long.\n" +
+                            "- Must start with a letter.\n" +
+                            "- Can only contain letters, numbers, underscores, and hyphens.\n" +
+                            "- No spaces allowed.",
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Password Validation
+        // Length: 6-20, At least 1 Letter, At least 1 Number
+        if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d\\W_]{6,20}$")) {
+            JOptionPane.showMessageDialog(this,
+                    "Invalid Password!\n" +
+                            "- Must be 6-20 characters long.\n" +
+                            "- Must contain at least 1 letter.\n" +
+                            "- Must contain at least 1 number.",
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
