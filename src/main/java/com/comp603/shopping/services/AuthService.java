@@ -9,7 +9,11 @@ public class AuthService {
     private User currentUser;
 
     public AuthService() {
-        this.userDAO = new UserDAO();
+        this(new UserDAO());
+    }
+
+    public AuthService(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     public boolean login(String username, String password) {
