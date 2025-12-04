@@ -2,6 +2,8 @@ package com.comp603.shopping.gui;
 
 import com.comp603.shopping.models.ShoppingCart;
 import com.comp603.shopping.services.AuthService;
+import com.comp603.shopping.gui.panels.*;
+import com.comp603.shopping.gui.dialogs.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

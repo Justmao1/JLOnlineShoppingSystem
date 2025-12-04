@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Dec 04 10:28:01 CST 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-019a-e730-1ec3-00000ed8e9e0 
+Thu Dec 04 10:59:31 CST 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-019a-e74c-f4e8-00000ed9ced0 
 on database directory /Users/mao/IdeaProjects/my_onlineshopingSystem/shopping_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@2c854dc5 
 Loaded from file:/Users/mao/.m2/repository/org/apache/derby/derby/10.15.2.0/derby-10.15.2.0.jar
 java.vendor=Oracle Corporation
