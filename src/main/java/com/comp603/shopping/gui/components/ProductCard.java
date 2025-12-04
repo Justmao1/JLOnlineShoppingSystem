@@ -174,5 +174,24 @@ public class ProductCard extends JPanel {
         add(Box.createVerticalStrut(10));
         add(actionPanel);
         add(Box.createVerticalStrut(10));
+        // Mouse Listener for Details
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                new com.comp603.shopping.gui.dialogs.ProductDetailsDialog(mainFrame, product).setVisible(true);
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                setBorder(new LineBorder(new Color(100, 149, 237), 2, true)); // Cornflower Blue highlight
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
+            }
+        });
     }
 }
