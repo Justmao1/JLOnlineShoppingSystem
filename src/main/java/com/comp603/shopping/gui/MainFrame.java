@@ -237,8 +237,8 @@ public class MainFrame extends JFrame {
             add(leftPanel, BorderLayout.WEST);
 
             // Right: User Info & Actions
-            JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
-            rightPanel.setOpaque(false);
+            JPanel rightActionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+            rightActionPanel.setOpaque(false);
 
             welcomeLabel = new JLabel("Welcome");
             welcomeLabel.setForeground(Color.WHITE);
@@ -258,12 +258,13 @@ public class MainFrame extends JFrame {
             myAccountButton.addActionListener(e -> MainFrame.this.openMyAccount());
             myAccountButton.setVisible(false); // Hidden by default in guest mode
 
-            rightPanel.add(welcomeLabel);
-            rightPanel.add(myAccountButton);
-            rightPanel.add(cartButton);
-            rightPanel.add(loginButton);
+            // Add components in strict order: Welcome -> Cart -> Auth (Login/MyAccount)
+            rightActionPanel.add(welcomeLabel);
+            rightActionPanel.add(cartButton);
+            rightActionPanel.add(loginButton);
+            rightActionPanel.add(myAccountButton);
 
-            add(rightPanel, BorderLayout.EAST);
+            add(rightActionPanel, BorderLayout.EAST);
 
             // Search Actions
             searchButton.addActionListener(e -> {
