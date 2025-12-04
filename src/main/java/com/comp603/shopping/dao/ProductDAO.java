@@ -144,4 +144,57 @@ public class ProductDAO {
             pstmt.executeUpdate();
         }
     }
+    
+    public Product getProductById(int productId) {
+        String sql = "SELECT * FROM PRODUCTS WHERE PRODUCT_ID = ?";
+        
+        try (Connection conn = DBManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, productId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return new Product(
+                        rs.getInt("PRODUCT_ID"),
+                        rs.getString("NAME"),
+                        rs.getString("DESCRIPTION"),
+                        rs.getDouble("PRICE"),
+                        rs.getInt("STOCK_QUANTITY"),
+                        rs.getString("IMAGE_PATH"),
+                        rs.getString("CATEGORY"),
+                        rs.getInt("SALES_VOLUME"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public List<Product> getAllProductsSorted(String sortBy, boolean ascending) {
+        List<Product> products = new ArrayList<>();
+        String order = ascending ? "ASC" : "DESC";
+        String sql = "SELECT * FROM PRODUCTS ORDER BY " + sortBy + " " + order;
+
+        try (Connection conn = DBManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getInt("PRODUCT_ID"),
+                        rs.getString("NAME"),
+                        rs.getString("DESCRIPTION"),
+                        rs.getDouble("PRICE"),
+                        rs.getInt("STOCK_QUANTITY"),
+                        rs.getString("IMAGE_PATH"),
+                        rs.getString("CATEGORY"),
+                        rs.getInt("SALES_VOLUME"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 }
