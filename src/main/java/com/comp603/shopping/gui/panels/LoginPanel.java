@@ -14,7 +14,7 @@ public class LoginPanel extends JPanel {
 
     public LoginPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-        
+
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -33,7 +33,7 @@ public class LoginPanel extends JPanel {
         gbc.gridx = 0;
         add(new JLabel("Username:"), gbc);
 
-        userField = new JTextField(35);
+        userField = new JTextField(15);
         userField.setText(""); // Ensure field is empty when panel is created
         gbc.gridx = 1;
         add(userField, gbc);
@@ -42,7 +42,7 @@ public class LoginPanel extends JPanel {
         gbc.gridx = 0;
         add(new JLabel("Password:"), gbc);
 
-        passField = new JPasswordField(35);
+        passField = new JPasswordField(15);
         passField.setText(""); // Ensure field is empty when panel is created
         gbc.gridx = 1;
         add(passField, gbc);
@@ -68,7 +68,7 @@ public class LoginPanel extends JPanel {
         add(buttonPanel, gbc);
 
         registerButton.addActionListener(e -> new RegisterDialog(mainFrame).setVisible(true));
-        
+
         backButton.addActionListener(e -> {
             clearFields(); // Clear fields when going back
             mainFrame.showCard("PRODUCTS");
@@ -109,7 +109,7 @@ public class LoginPanel extends JPanel {
             }
         });
     }
-    
+
     /**
      * Clear the username and password fields
      */
@@ -117,7 +117,7 @@ public class LoginPanel extends JPanel {
         userField.setText("");
         passField.setText("");
     }
-    
+
     /**
      * Override setVisible to clear fields each time the panel becomes visible
      */
