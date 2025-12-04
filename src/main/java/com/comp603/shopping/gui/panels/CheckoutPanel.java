@@ -133,6 +133,7 @@ public class CheckoutPanel extends JPanel {
             if (createOrder()) {
                 JOptionPane.showMessageDialog(this, "Payment Successful! Order Placed.");
                 mainFrame.getCart().clear();
+                mainFrame.updateCartCount();
                 mainFrame.showCard("PRODUCTS");
             } else {
                 JOptionPane.showMessageDialog(this, "Payment processed but Order creation failed!", "Error",
