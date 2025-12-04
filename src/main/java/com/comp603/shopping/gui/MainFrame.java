@@ -30,7 +30,6 @@ public class MainFrame extends JFrame {
         // Header (North)
         headerPanel = new HeaderPanel();
         add(headerPanel, BorderLayout.NORTH);
-        headerPanel.setVisible(false); // Hidden initially until login
 
         // Main Content (Center)
         cardLayout = new CardLayout();
@@ -40,14 +39,31 @@ public class MainFrame extends JFrame {
         LoginPanel loginPanel = new LoginPanel(this);
         mainPanel.add(loginPanel, "LOGIN");
 
+        // Show products by default (guest mode)
+        ProductListPanel productPanel = new ProductListPanel(this);
+        mainPanel.add(productPanel, "PRODUCTS");
+
         add(mainPanel, BorderLayout.CENTER);
 
-        // Start with Login
-        showCard("LOGIN");
+        // Start with Products page
+        showCard("PRODUCTS");
     }
 
     public void showCard(String cardName) {
         cardLayout.show(mainPanel, cardName);
+        // 控制HeaderPanel中的认证按钮显示/隐藏
+        if ("LOGIN".equals(cardName)) {
+            headerPanel.showAuthButtons(false);
+            // Clear login form when showing login panel
+            for (Component comp : mainPanel.getComponents()) {
+                if (comp instanceof LoginPanel) {
+                    ((LoginPanel) comp).setVisible(true); // This will trigger clearing the fields
+                    break;
+                }
+            }
+        } else {
+            headerPanel.showAuthButtons(true);
+        }
     }
 
     public AuthService getAuthService() {
@@ -58,6 +74,10 @@ public class MainFrame extends JFrame {
         return cart;
     }
 
+    public boolean isLoggedIn() {
+        return authService.getCurrentUser() != null;
+    }
+
     public void onLoginSuccess() {
         // Initialize other panels after login to ensure data is fresh
 
@@ -66,16 +86,12 @@ public class MainFrame extends JFrame {
             mainPanel.add(adminDashboard, "ADMIN_DASHBOARD");
             showCard("ADMIN_DASHBOARD");
         } else {
-            ProductListPanel productPanel = new ProductListPanel(this);
-            mainPanel.add(productPanel, "PRODUCTS");
-
             // Set User ID in Cart
             cart.setUserId(authService.getCurrentUser().getUserId());
 
             headerPanel.updateUser(authService.getCurrentUser().getUsername());
             headerPanel.updateCartCount(
                     cart.getItems().stream().mapToInt(com.comp603.shopping.models.CartItem::getQuantity).sum());
-            headerPanel.setVisible(true);
 
             showCard("PRODUCTS");
         }
@@ -84,25 +100,42 @@ public class MainFrame extends JFrame {
     public void logout() {
         authService.logout();
         cart.clear();
-        headerPanel.setVisible(false);
-        showCard("LOGIN");
+        headerPanel.resetToGuestMode();
+        showCard("PRODUCTS");
     }
 
     public void showCart() {
+        if (!isLoggedIn()) {
+            JOptionPane.showMessageDialog(this, "Please log in to view your cart.", "Login Required", JOptionPane.WARNING_MESSAGE);
+            showCard("LOGIN");
+            return;
+        }
         new CartDialog(this).setVisible(true);
     }
 
     public void startCheckout() {
+        if (!isLoggedIn()) {
+            JOptionPane.showMessageDialog(this, "Please log in to checkout.", "Login Required", JOptionPane.WARNING_MESSAGE);
+            showCard("LOGIN");
+            return;
+        }
         CheckoutPanel checkoutPanel = new CheckoutPanel(this);
         mainPanel.add(checkoutPanel, "CHECKOUT");
         showCard("CHECKOUT");
     }
 
     public void updateCartCount() {
-        headerPanel.updateCartCount(cart.getItems().size());
+        if (isLoggedIn()) {
+            headerPanel.updateCartCount(cart.getItems().size());
+        }
     }
 
     public void openMyAccount() {
+        if (!isLoggedIn()) {
+            JOptionPane.showMessageDialog(this, "Please log in to access your account.", "Login Required", JOptionPane.WARNING_MESSAGE);
+            showCard("LOGIN");
+            return;
+        }
         new MyAccountDialog(this).setVisible(true);
     }
 
@@ -113,6 +146,8 @@ public class MainFrame extends JFrame {
                 ProductListPanel panel = (ProductListPanel) comp;
                 com.comp603.shopping.dao.ProductDAO dao = new com.comp603.shopping.dao.ProductDAO();
                 panel.updateProductList(dao.searchProducts(keyword));
+                // Clear the search field after performing search
+                headerPanel.clearSearchField();
                 return;
             }
         }
@@ -131,6 +166,8 @@ public class MainFrame extends JFrame {
         private JLabel welcomeLabel;
         private JButton cartButton;
         private JTextField searchField;
+        private JButton loginButton;
+        private JButton myAccountButton;
 
         public HeaderPanel() {
             setLayout(new BorderLayout());
@@ -141,27 +178,32 @@ public class MainFrame extends JFrame {
             JLabel titleLabel = new JLabel("CyberShop");
             titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
             titleLabel.setForeground(Color.WHITE);
-            add(titleLabel, BorderLayout.WEST);
+            
+            // Create a panel for the left side containing title, home button and search
+            JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+            leftPanel.setOpaque(false);
+            leftPanel.add(titleLabel);
 
-            // Center: Search Bar
-            JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            searchPanel.setOpaque(false);
-
+            // Home button
             JButton homeButton = new JButton("🏠");
             homeButton.setToolTipText("Home");
             homeButton.setFocusPainted(false);
             homeButton.addActionListener(e -> {
                 showCard("PRODUCTS");
                 refreshView();
+                clearSearchField(); // Clear search field when going home
             });
-
+            
+            // Search components
             searchField = new JTextField(20);
             JButton searchButton = new JButton("Search");
-
-            searchPanel.add(homeButton);
-            searchPanel.add(searchField);
-            searchPanel.add(searchButton);
-            add(searchPanel, BorderLayout.CENTER);
+            
+            // Add home button and search components to the left panel
+            leftPanel.add(homeButton);
+            leftPanel.add(searchField);
+            leftPanel.add(searchButton);
+            
+            add(leftPanel, BorderLayout.WEST);
 
             // Right: User Info & Actions
             JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
@@ -170,6 +212,7 @@ public class MainFrame extends JFrame {
             welcomeLabel = new JLabel("Welcome");
             welcomeLabel.setForeground(Color.WHITE);
             welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            welcomeLabel.setVisible(false); // Hide by default in guest mode
 
             cartButton = new JButton("View Cart (0)");
             cartButton.setBackground(new Color(255, 165, 0)); // Orange
@@ -177,26 +220,57 @@ public class MainFrame extends JFrame {
             cartButton.setFocusPainted(false);
             cartButton.addActionListener(e -> showCart());
 
-            JButton myAccountButton = new JButton("My Account");
+            loginButton = new JButton("Log In");
+            loginButton.addActionListener(e -> showCard("LOGIN"));
+
+            myAccountButton = new JButton("My Account");
             myAccountButton.addActionListener(e -> MainFrame.this.openMyAccount());
+            myAccountButton.setVisible(false); // Hidden by default in guest mode
 
             rightPanel.add(welcomeLabel);
-            rightPanel.add(cartButton);
             rightPanel.add(myAccountButton);
+            rightPanel.add(cartButton);
+            rightPanel.add(loginButton);
 
             add(rightPanel, BorderLayout.EAST);
 
             // Search Actions
-            searchButton.addActionListener(e -> performSearch(searchField.getText().trim()));
-            searchField.addActionListener(e -> performSearch(searchField.getText().trim()));
+            searchButton.addActionListener(e -> {
+                performSearch(searchField.getText().trim());
+            });
+            
+            searchField.addActionListener(e -> {
+                performSearch(searchField.getText().trim());
+            });
         }
 
         public void updateUser(String username) {
             welcomeLabel.setText("Welcome, " + username);
+            welcomeLabel.setVisible(true);
+            loginButton.setVisible(false);  // Hide login button when user logs in
+            myAccountButton.setVisible(true);
         }
 
         public void updateCartCount(int count) {
             cartButton.setText("View Cart (" + count + ")");
+        }
+
+        public void resetToGuestMode() {
+            welcomeLabel.setVisible(false);
+            loginButton.setVisible(true);   // Show login button in guest mode
+            cartButton.setText("View Cart (0)");
+            myAccountButton.setVisible(false);
+        }
+        
+        public void showAuthButtons(boolean show) {
+            cartButton.setVisible(show);
+            loginButton.setVisible(show && !isLoggedIn());  // Only show login when not logged in
+            myAccountButton.setVisible(show && isLoggedIn());
+            welcomeLabel.setVisible(show && isLoggedIn());
+        }
+        
+        public void clearSearchField() {
+            searchField.setText("");
         }
     }
 

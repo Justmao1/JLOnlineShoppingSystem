@@ -40,4 +40,8 @@ public class AuthService {
     public User getCurrentUser() {
         return currentUser;
     }
+    
+    public boolean isLoggedIn() {
+        return currentUser != null;
+    }
 }

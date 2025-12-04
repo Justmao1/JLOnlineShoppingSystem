@@ -70,17 +70,30 @@ public class ProductCard extends JPanel {
         starButton.setFocusPainted(false);
         starButton.setFont(new Font("SansSerif", Font.BOLD, 24));
 
-        // Check if in wishlist
-        int userId = mainFrame.getAuthService().getCurrentUser().getUserId();
-        if (wishlistDAO.isInWishlist(userId, product.getProductId())) {
-            starButton.setSelected(true);
-            starButton.setForeground(Color.ORANGE);
+        // Check if in wishlist (only if logged in)
+        if (mainFrame.isLoggedIn()) {
+            int userId = mainFrame.getAuthService().getCurrentUser().getUserId();
+            if (wishlistDAO.isInWishlist(userId, product.getProductId())) {
+                starButton.setSelected(true);
+                starButton.setForeground(Color.ORANGE);
+            } else {
+                starButton.setSelected(false);
+                starButton.setForeground(Color.GRAY);
+            }
         } else {
             starButton.setSelected(false);
             starButton.setForeground(Color.GRAY);
         }
 
         starButton.addActionListener(e -> {
+            if (!mainFrame.isLoggedIn()) {
+                JOptionPane.showMessageDialog(this, "Please log in to add items to your wishlist.", "Login Required", JOptionPane.WARNING_MESSAGE);
+                mainFrame.showCard("LOGIN");
+                starButton.setSelected(!starButton.isSelected()); // Revert selection
+                return;
+            }
+            
+            int userId = mainFrame.getAuthService().getCurrentUser().getUserId();
             if (starButton.isSelected()) {
                 if (wishlistDAO.addToWishlist(userId, product.getProductId())) {
                     starButton.setForeground(Color.ORANGE);
@@ -121,6 +134,12 @@ public class ProductCard extends JPanel {
         }
 
         addToCartButton.addActionListener(e -> {
+            if (!mainFrame.isLoggedIn()) {
+                JOptionPane.showMessageDialog(this, "Please log in to add items to your cart.", "Login Required", JOptionPane.WARNING_MESSAGE);
+                mainFrame.showCard("LOGIN");
+                return;
+            }
+            
             mainFrame.getCart().addProduct(product);
             mainFrame.updateCartCount();
             JOptionPane.showMessageDialog(this, "Added to cart!");

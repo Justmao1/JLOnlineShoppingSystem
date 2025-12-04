@@ -10,9 +10,11 @@ public class LoginPanel extends JPanel {
 
     private JTextField userField;
     private JPasswordField passField;
+    private MainFrame mainFrame;
 
     public LoginPanel(MainFrame mainFrame) {
-
+        this.mainFrame = mainFrame;
+        
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -23,6 +25,7 @@ public class LoginPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
         add(titleLabel, gbc);
 
         gbc.gridwidth = 1;
@@ -30,7 +33,8 @@ public class LoginPanel extends JPanel {
         gbc.gridx = 0;
         add(new JLabel("Username:"), gbc);
 
-        userField = new JTextField(15);
+        userField = new JTextField(35);
+        userField.setText(""); // Ensure field is empty when panel is created
         gbc.gridx = 1;
         add(userField, gbc);
 
@@ -38,7 +42,8 @@ public class LoginPanel extends JPanel {
         gbc.gridx = 0;
         add(new JLabel("Password:"), gbc);
 
-        passField = new JPasswordField(15);
+        passField = new JPasswordField(35);
+        passField.setText(""); // Ensure field is empty when panel is created
         gbc.gridx = 1;
         add(passField, gbc);
 
@@ -50,10 +55,12 @@ public class LoginPanel extends JPanel {
 
         JButton loginButton = new JButton("Login");
         JButton registerButton = new JButton("Register");
+        JButton backButton = new JButton("Back");
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(loginButton);
         buttonPanel.add(registerButton);
+        buttonPanel.add(backButton);
 
         gbc.gridy = 4;
         gbc.gridx = 0;
@@ -61,6 +68,11 @@ public class LoginPanel extends JPanel {
         add(buttonPanel, gbc);
 
         registerButton.addActionListener(e -> new RegisterDialog(mainFrame).setVisible(true));
+        
+        backButton.addActionListener(e -> {
+            clearFields(); // Clear fields when going back
+            mainFrame.showCard("PRODUCTS");
+        });
 
         loginButton.addActionListener((ActionEvent e) -> {
             String user = userField.getText();
@@ -68,6 +80,7 @@ public class LoginPanel extends JPanel {
             boolean isAdminLogin = adminCheck.isSelected();
 
             if (mainFrame.getAuthService().login(user, pass)) {
+                clearFields(); // Clear fields on successful login
                 com.comp603.shopping.models.User currentUser = mainFrame.getAuthService().getCurrentUser();
 
                 if (isAdminLogin) {
@@ -95,5 +108,24 @@ public class LoginPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Invalid credentials!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+    }
+    
+    /**
+     * Clear the username and password fields
+     */
+    private void clearFields() {
+        userField.setText("");
+        passField.setText("");
+    }
+    
+    /**
+     * Override setVisible to clear fields each time the panel becomes visible
+     */
+    @Override
+    public void setVisible(boolean aFlag) {
+        if (aFlag) {
+            clearFields();
+        }
+        super.setVisible(aFlag);
     }
 }

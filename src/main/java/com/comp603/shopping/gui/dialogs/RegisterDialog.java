@@ -1,6 +1,7 @@
 package com.comp603.shopping.gui.dialogs;
 
 import com.comp603.shopping.dao.UserDAO;
+import com.comp603.shopping.gui.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 
@@ -54,9 +55,11 @@ public class RegisterDialog extends JDialog {
         JPanel buttonPanel = new JPanel();
         JButton registerButton = new JButton("Register");
         JButton cancelButton = new JButton("Cancel");
+        JButton backButton = new JButton("Back");
 
         buttonPanel.add(registerButton);
         buttonPanel.add(cancelButton);
+        buttonPanel.add(backButton);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -65,6 +68,14 @@ public class RegisterDialog extends JDialog {
 
         // Actions
         cancelButton.addActionListener(e -> dispose());
+        
+        backButton.addActionListener(e -> {
+            dispose();
+            // Show login panel when back button is clicked
+            if (parent instanceof MainFrame) {
+                ((MainFrame) parent).showCard("LOGIN");
+            }
+        });
 
         registerButton.addActionListener(e -> register());
     }
