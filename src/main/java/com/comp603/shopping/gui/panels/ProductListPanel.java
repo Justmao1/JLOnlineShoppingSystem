@@ -15,6 +15,7 @@ public class ProductListPanel extends JPanel {
     private MainFrame mainFrame;
     private JPanel productContainer;
     private ProductDAO productDAO;
+    private CarouselPanel carouselPanel;
 
     public ProductListPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -36,7 +37,7 @@ public class ProductListPanel extends JPanel {
         List<Product> hotProducts = allProducts.size() > 5 ? allProducts.subList(0, 5) : allProducts;
 
         // Carousel
-        CarouselPanel carouselPanel = new CarouselPanel(hotProducts);
+        carouselPanel = new CarouselPanel(hotProducts);
 
         // Combined Panel for ScrollPane
         JPanel scrollableContent = new JPanel(new BorderLayout());
@@ -72,5 +73,14 @@ public class ProductListPanel extends JPanel {
     public void refreshProducts() {
         List<Product> productList = productDAO.getAllProducts();
         updateProductList(productList);
+        setCarouselVisible(true);
+    }
+
+    public void setCarouselVisible(boolean visible) {
+        if (carouselPanel != null) {
+            carouselPanel.setVisible(visible);
+            revalidate();
+            repaint();
+        }
     }
 }
