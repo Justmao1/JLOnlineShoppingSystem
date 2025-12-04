@@ -24,7 +24,7 @@ public class CartPanel extends JPanel {
         add(headerPanel, BorderLayout.NORTH);
 
         // Cart Table
-        String[] columnNames = { "Name", "Price", "Type" };
+        String[] columnNames = { "Name", "Price", "Category" };
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable cartTable = new JTable(tableModel);
         add(new JScrollPane(cartTable), BorderLayout.CENTER);
@@ -74,7 +74,7 @@ public class CartPanel extends JPanel {
             Object[] row = {
                     p.getName(),
                     String.format("$%.2f", p.getPrice()),
-                    p instanceof com.comp603.shopping.models.PhysicalProduct ? "Physical" : "Digital"
+                    p.getCategory()
             };
             tableModel.addRow(row);
         }

@@ -1,7 +1,5 @@
 package com.comp603.shopping.gui.dialogs;
 
-import com.comp603.shopping.models.DigitalProduct;
-import com.comp603.shopping.models.PhysicalProduct;
 import com.comp603.shopping.models.Product;
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +10,7 @@ public class ProductDialog extends JDialog {
     private JTextField descField;
     private JTextField priceField;
     private JTextField stockField;
-    private JComboBox<String> typeCombo;
-    private JTextField extraField; // Weight or Link
-    private JLabel extraLabel;
+    private JComboBox<String> categoryCombo;
     private String selectedImagePath;
     private JLabel imageLabel;
     private boolean confirmed = false;
@@ -25,16 +21,15 @@ public class ProductDialog extends JDialog {
         this.product = productToEdit;
 
         setLayout(new BorderLayout());
-        JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10)); // Increased rows
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         nameField = new JTextField();
         descField = new JTextField();
         priceField = new JTextField();
         stockField = new JTextField();
-        typeCombo = new JComboBox<>(new String[] { "Physical", "Digital" });
-        extraField = new JTextField();
-        extraLabel = new JLabel("Weight (kg):");
+        categoryCombo = new JComboBox<>(
+                new String[] { "Books", "Sports & Outdoors", "Electronics", "CDs", "Clothing" });
 
         JButton selectImageButton = new JButton("Select Image");
         imageLabel = new JLabel("No image selected");
@@ -47,10 +42,8 @@ public class ProductDialog extends JDialog {
         formPanel.add(priceField);
         formPanel.add(new JLabel("Stock:"));
         formPanel.add(stockField);
-        formPanel.add(new JLabel("Type:"));
-        formPanel.add(typeCombo);
-        formPanel.add(extraLabel);
-        formPanel.add(extraField);
+        formPanel.add(new JLabel("Category:"));
+        formPanel.add(categoryCombo);
         formPanel.add(selectImageButton);
         formPanel.add(imageLabel);
 
@@ -65,14 +58,6 @@ public class ProductDialog extends JDialog {
         add(buttonPanel, BorderLayout.SOUTH);
 
         // Logic
-        typeCombo.addActionListener(e -> {
-            if ("Physical".equals(typeCombo.getSelectedItem())) {
-                extraLabel.setText("Weight (kg):");
-            } else {
-                extraLabel.setText("Download Link:");
-            }
-        });
-
         selectImageButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(this);
@@ -81,6 +66,9 @@ public class ProductDialog extends JDialog {
                 try {
                     String fileName = System.currentTimeMillis() + "_" + selectedFile.getName();
                     java.nio.file.Path destPath = java.nio.file.Paths.get("images", fileName);
+                    if (!java.nio.file.Files.exists(destPath.getParent())) {
+                        java.nio.file.Files.createDirectories(destPath.getParent());
+                    }
                     java.nio.file.Files.copy(selectedFile.toPath(), destPath,
                             java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                     selectedImagePath = "images/" + fileName;
@@ -118,27 +106,16 @@ public class ProductDialog extends JDialog {
         if (selectedImagePath != null) {
             imageLabel.setText(selectedImagePath);
         }
-
-        if (product instanceof PhysicalProduct) {
-            typeCombo.setSelectedItem("Physical");
-            extraField.setText(String.valueOf(((PhysicalProduct) product).getWeight()));
-        } else {
-            typeCombo.setSelectedItem("Digital");
-            extraField.setText(((DigitalProduct) product).getDownloadLink());
-        }
-        typeCombo.setEnabled(false); // Can't change type of existing product easily
+        categoryCombo.setSelectedItem(product.getCategory());
     }
 
     private boolean validateFields() {
         try {
             Double.parseDouble(priceField.getText());
             Integer.parseInt(stockField.getText());
-            if ("Physical".equals(typeCombo.getSelectedItem())) {
-                Double.parseDouble(extraField.getText());
-            }
             return true;
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid number format for Price, Stock, or Weight.", "Error",
+            JOptionPane.showMessageDialog(this, "Invalid number format for Price or Stock.", "Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -153,17 +130,12 @@ public class ProductDialog extends JDialog {
         String desc = descField.getText();
         double price = Double.parseDouble(priceField.getText());
         int stock = Integer.parseInt(stockField.getText());
+        String category = (String) categoryCombo.getSelectedItem();
 
-        if ("Physical".equals(typeCombo.getSelectedItem())) {
-            double weight = Double.parseDouble(extraField.getText());
-            Product p = new PhysicalProduct(product == null ? 0 : product.getProductId(), name, desc, price, stock,
-                    weight, selectedImagePath);
-            return p;
-        } else {
-            String link = extraField.getText();
-            Product p = new DigitalProduct(product == null ? 0 : product.getProductId(), name, desc, price, stock,
-                    link, selectedImagePath);
-            return p;
-        }
+        // Preserve ID and Sales Volume if editing, else 0
+        int id = (product == null) ? 0 : product.getProductId();
+        int sales = (product == null) ? 0 : product.getSalesVolume();
+
+        return new Product(id, name, desc, price, stock, selectedImagePath, category, sales);
     }
 }

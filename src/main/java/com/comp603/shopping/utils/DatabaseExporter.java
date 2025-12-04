@@ -3,12 +3,9 @@ package com.comp603.shopping.utils;
 import com.comp603.shopping.config.DBManager;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DatabaseExporter {
 
@@ -113,13 +110,8 @@ public class DatabaseExporter {
 
             // Build column list
             List<String> columns = new ArrayList<>();
-            String identityColumn = null;
             for (int i = 1; i <= columnCount; i++) {
                 columns.add(metaData.getColumnName(i));
-                // Try to guess identity column (usually ends with _ID and is first)
-                if (i == 1 && metaData.isAutoIncrement(i)) {
-                    identityColumn = metaData.getColumnName(i);
-                }
             }
             String columnList = String.join(", ", columns);
 

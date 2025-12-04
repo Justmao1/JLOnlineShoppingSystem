@@ -4,29 +4,34 @@ package com.comp603.shopping.models;
  * Abstract base class for all products.
  * Demonstrates Abstraction and Inheritance.
  */
-public abstract class Product {
-    protected int productId;
-    protected String name;
-    protected String description;
-    protected double price;
-    protected int stockQuantity;
-    protected String imagePath; // Added imagePath field
+public class Product {
+    private int productId;
+    private String name;
+    private String description;
+    private double price;
+    private int stockQuantity;
+    private String imagePath;
+    private String category;
+    private int salesVolume;
 
-    // Added no-argument constructor
     public Product() {
     }
 
-    public Product(int productId, String name, String description, double price, int stockQuantity, String imagePath) {
+    public Product(int productId, String name, String description, double price, int stockQuantity, String imagePath,
+            String category, int salesVolume) {
         this.productId = productId;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.imagePath = imagePath; // Initialize imagePath
+        this.imagePath = imagePath;
+        this.category = category;
+        this.salesVolume = salesVolume;
     }
 
-    // Abstract method to be implemented by subclasses (Polymorphism)
-    public abstract String getDisplayInfo();
+    public String getDisplayInfo() {
+        return String.format("%s (%s) - $%.2f", name, category, price);
+    }
 
     public int getProductId() {
         return productId;
@@ -68,13 +73,27 @@ public abstract class Product {
         this.stockQuantity = stockQuantity;
     }
 
-    // Added getter for imagePath
     public String getImagePath() {
         return imagePath;
     }
 
-    // Added setter for imagePath
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getSalesVolume() {
+        return salesVolume;
+    }
+
+    public void setSalesVolume(int salesVolume) {
+        this.salesVolume = salesVolume;
     }
 }

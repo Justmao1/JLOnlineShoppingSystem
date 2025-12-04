@@ -87,12 +87,13 @@ public class ProductCard extends JPanel {
 
         starButton.addActionListener(e -> {
             if (!mainFrame.isLoggedIn()) {
-                JOptionPane.showMessageDialog(this, "Please log in to add items to your wishlist.", "Login Required", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please log in to add items to your wishlist.", "Login Required",
+                        JOptionPane.WARNING_MESSAGE);
                 mainFrame.showCard("LOGIN");
                 starButton.setSelected(!starButton.isSelected()); // Revert selection
                 return;
             }
-            
+
             int userId = mainFrame.getAuthService().getCurrentUser().getUserId();
             if (starButton.isSelected()) {
                 if (wishlistDAO.addToWishlist(userId, product.getProductId())) {
@@ -109,6 +110,12 @@ public class ProductCard extends JPanel {
         JLabel nameLabel = new JLabel(product.getName());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Category
+        JLabel categoryLabel = new JLabel(product.getCategory());
+        categoryLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        categoryLabel.setForeground(Color.DARK_GRAY);
+        categoryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Price
         JLabel priceLabel = new JLabel(String.format("$%.2f", product.getPrice()));
@@ -135,11 +142,12 @@ public class ProductCard extends JPanel {
 
         addToCartButton.addActionListener(e -> {
             if (!mainFrame.isLoggedIn()) {
-                JOptionPane.showMessageDialog(this, "Please log in to add items to your cart.", "Login Required", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please log in to add items to your cart.", "Login Required",
+                        JOptionPane.WARNING_MESSAGE);
                 mainFrame.showCard("LOGIN");
                 return;
             }
-            
+
             mainFrame.getCart().addProduct(product);
             mainFrame.updateCartCount();
             JOptionPane.showMessageDialog(this, "Added to cart!");
@@ -157,6 +165,8 @@ public class ProductCard extends JPanel {
         add(imagePanel);
         add(Box.createVerticalStrut(10));
         add(nameLabel);
+        add(Box.createVerticalStrut(2));
+        add(categoryLabel);
         add(Box.createVerticalStrut(5));
         add(priceLabel);
         add(Box.createVerticalStrut(5));

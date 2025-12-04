@@ -1,8 +1,6 @@
 package com.comp603.shopping.dao;
 
 import com.comp603.shopping.config.DBManager;
-import com.comp603.shopping.models.DigitalProduct;
-import com.comp603.shopping.models.PhysicalProduct;
 import com.comp603.shopping.models.Product;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,29 +63,16 @@ public class ShoppingCartDAO {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                String type = rs.getString("TYPE");
-                Product product;
                 int quantity = rs.getInt("CART_QUANTITY");
-
-                if ("PHYSICAL".equalsIgnoreCase(type)) {
-                    product = new PhysicalProduct(
-                            rs.getInt("PRODUCT_ID"),
-                            rs.getString("NAME"),
-                            rs.getString("DESCRIPTION"),
-                            rs.getDouble("PRICE"),
-                            rs.getInt("STOCK_QUANTITY"), // This is stock
-                            rs.getDouble("WEIGHT"),
-                            rs.getString("IMAGE_PATH"));
-                } else {
-                    product = new DigitalProduct(
-                            rs.getInt("PRODUCT_ID"),
-                            rs.getString("NAME"),
-                            rs.getString("DESCRIPTION"),
-                            rs.getDouble("PRICE"),
-                            rs.getInt("STOCK_QUANTITY"), // This is stock
-                            rs.getString("DOWNLOAD_LINK"),
-                            rs.getString("IMAGE_PATH"));
-                }
+                Product product = new Product(
+                        rs.getInt("PRODUCT_ID"),
+                        rs.getString("NAME"),
+                        rs.getString("DESCRIPTION"),
+                        rs.getDouble("PRICE"),
+                        rs.getInt("STOCK_QUANTITY"),
+                        rs.getString("IMAGE_PATH"),
+                        rs.getString("CATEGORY"),
+                        rs.getInt("SALES_VOLUME"));
                 items.add(new CartItem(product, quantity));
             }
         } catch (SQLException e) {

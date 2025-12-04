@@ -56,7 +56,7 @@ public class AdminDashboard extends JPanel {
         JPanel panel = new JPanel(new BorderLayout());
 
         // Table
-        String[] columnNames = { "Image", "ID", "Name", "Price", "Stock" };
+        String[] columnNames = { "Image", "ID", "Name", "Category", "Price", "Stock", "Sales" };
         productTableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -107,7 +107,7 @@ public class AdminDashboard extends JPanel {
         deleteButton.addActionListener(e -> {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow >= 0) {
-                int productId = (int) productTableModel.getValueAt(selectedRow, 1); // ID is at index 1 now
+                int productId = (int) productTableModel.getValueAt(selectedRow, 1); // ID is at index 1
                 int confirm = JOptionPane.showConfirmDialog(this,
                         "Are you sure you want to delete Product ID: " + productId + "?", "Confirm Delete",
                         JOptionPane.YES_NO_OPTION);
@@ -129,7 +129,7 @@ public class AdminDashboard extends JPanel {
         editButton.addActionListener(e -> {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow >= 0) {
-                int productId = (int) productTableModel.getValueAt(selectedRow, 1); // ID is at index 1 now
+                int productId = (int) productTableModel.getValueAt(selectedRow, 1); // ID is at index 1
                 // Find product object
                 List<Product> products = productDAO.getAllProducts();
                 Product selectedProduct = products.stream().filter(p -> p.getProductId() == productId).findFirst()
@@ -225,8 +225,10 @@ public class AdminDashboard extends JPanel {
                     icon,
                     p.getProductId(),
                     p.getName(),
+                    p.getCategory(),
                     p.getPrice(),
-                    p.getStockQuantity()
+                    p.getStockQuantity(),
+                    p.getSalesVolume()
             };
             productTableModel.addRow(row);
         }
