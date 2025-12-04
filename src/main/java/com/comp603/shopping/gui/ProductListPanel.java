@@ -20,7 +20,8 @@ public class ProductListPanel extends JPanel {
         setBackground(Color.WHITE);
 
         // Product Container (Grid Layout)
-        productContainer = new JPanel(new GridLayout(0, 3, 20, 20)); // 3 columns, gaps
+        // Product Container (Wrap Layout)
+        productContainer = new JPanel(new WrapLayout(FlowLayout.LEFT, 20, 20)); // Use custom WrapLayout
         productContainer.setBackground(Color.WHITE);
         productContainer.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -29,6 +30,7 @@ public class ProductListPanel extends JPanel {
         // Scroll Pane
         JScrollPane scrollPane = new JScrollPane(productContainer);
         scrollPane.setBorder(null);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Disable horizontal scroll
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         add(scrollPane, BorderLayout.CENTER);
     }

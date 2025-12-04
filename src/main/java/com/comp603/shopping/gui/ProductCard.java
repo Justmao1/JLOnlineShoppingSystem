@@ -17,7 +17,10 @@ public class ProductCard extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
-        setPreferredSize(new Dimension(200, 250)); // Fixed size for grid consistency
+        Dimension cardSize = new Dimension(220, 320);
+        setPreferredSize(cardSize);
+        setMinimumSize(cardSize);
+        setMaximumSize(cardSize);
 
         // Image Panel
         JPanel imagePanel = new JPanel(new BorderLayout());
