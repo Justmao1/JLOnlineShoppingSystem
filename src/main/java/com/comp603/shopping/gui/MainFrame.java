@@ -51,6 +51,14 @@ public class MainFrame extends JFrame {
 
     public void showCard(String cardName) {
         cardLayout.show(mainPanel, cardName);
+
+        if ("ADMIN_DASHBOARD".equals(cardName)) {
+            headerPanel.setVisible(false);
+            return;
+        }
+
+        headerPanel.setVisible(true);
+
         // 控制HeaderPanel中的认证按钮显示/隐藏
         if ("LOGIN".equals(cardName)) {
             headerPanel.showAuthButtons(false);
@@ -106,7 +114,8 @@ public class MainFrame extends JFrame {
 
     public void showCart() {
         if (!isLoggedIn()) {
-            JOptionPane.showMessageDialog(this, "Please log in to view your cart.", "Login Required", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please log in to view your cart.", "Login Required",
+                    JOptionPane.WARNING_MESSAGE);
             showCard("LOGIN");
             return;
         }
@@ -115,7 +124,8 @@ public class MainFrame extends JFrame {
 
     public void startCheckout() {
         if (!isLoggedIn()) {
-            JOptionPane.showMessageDialog(this, "Please log in to checkout.", "Login Required", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please log in to checkout.", "Login Required",
+                    JOptionPane.WARNING_MESSAGE);
             showCard("LOGIN");
             return;
         }
@@ -132,7 +142,8 @@ public class MainFrame extends JFrame {
 
     public void openMyAccount() {
         if (!isLoggedIn()) {
-            JOptionPane.showMessageDialog(this, "Please log in to access your account.", "Login Required", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please log in to access your account.", "Login Required",
+                    JOptionPane.WARNING_MESSAGE);
             showCard("LOGIN");
             return;
         }
@@ -178,7 +189,7 @@ public class MainFrame extends JFrame {
             JLabel titleLabel = new JLabel("CyberShop");
             titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
             titleLabel.setForeground(Color.WHITE);
-            
+
             // Create a panel for the left side containing title, home button and search
             JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
             leftPanel.setOpaque(false);
@@ -193,16 +204,16 @@ public class MainFrame extends JFrame {
                 refreshView();
                 clearSearchField(); // Clear search field when going home
             });
-            
+
             // Search components
             searchField = new JTextField(20);
             JButton searchButton = new JButton("Search");
-            
+
             // Add home button and search components to the left panel
             leftPanel.add(homeButton);
             leftPanel.add(searchField);
             leftPanel.add(searchButton);
-            
+
             add(leftPanel, BorderLayout.WEST);
 
             // Right: User Info & Actions
@@ -238,7 +249,7 @@ public class MainFrame extends JFrame {
             searchButton.addActionListener(e -> {
                 performSearch(searchField.getText().trim());
             });
-            
+
             searchField.addActionListener(e -> {
                 performSearch(searchField.getText().trim());
             });
@@ -247,7 +258,7 @@ public class MainFrame extends JFrame {
         public void updateUser(String username) {
             welcomeLabel.setText("Welcome, " + username);
             welcomeLabel.setVisible(true);
-            loginButton.setVisible(false);  // Hide login button when user logs in
+            loginButton.setVisible(false); // Hide login button when user logs in
             myAccountButton.setVisible(true);
         }
 
@@ -257,18 +268,18 @@ public class MainFrame extends JFrame {
 
         public void resetToGuestMode() {
             welcomeLabel.setVisible(false);
-            loginButton.setVisible(true);   // Show login button in guest mode
+            loginButton.setVisible(true); // Show login button in guest mode
             cartButton.setText("View Cart (0)");
             myAccountButton.setVisible(false);
         }
-        
+
         public void showAuthButtons(boolean show) {
             cartButton.setVisible(show);
-            loginButton.setVisible(show && !isLoggedIn());  // Only show login when not logged in
+            loginButton.setVisible(show && !isLoggedIn()); // Only show login when not logged in
             myAccountButton.setVisible(show && isLoggedIn());
             welcomeLabel.setVisible(show && isLoggedIn());
         }
-        
+
         public void clearSearchField() {
             searchField.setText("");
         }
