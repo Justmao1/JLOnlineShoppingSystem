@@ -27,6 +27,14 @@ public class ProductListPanel extends JPanel {
 
         refreshProducts();
 
+        // Fetch products for carousel (e.g., first 5)
+        List<Product> allProducts = productDAO.getAllProducts();
+        List<Product> hotProducts = allProducts.size() > 5 ? allProducts.subList(0, 5) : allProducts;
+
+        // Carousel (North)
+        CarouselPanel carouselPanel = new CarouselPanel(hotProducts);
+        add(carouselPanel, BorderLayout.NORTH);
+
         // Scroll Pane
         JScrollPane scrollPane = new JScrollPane(productContainer);
         scrollPane.setBorder(null);

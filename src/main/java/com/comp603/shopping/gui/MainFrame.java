@@ -20,7 +20,8 @@ public class MainFrame extends JFrame {
         this.cart = new ShoppingCart();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 700); // Increased size for better grid view
+        setSize(1040, 700); // Increased size for better grid view
+        setMinimumSize(new Dimension(1040, 700)); // Restrict minimum size
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
