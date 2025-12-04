@@ -187,7 +187,7 @@ public class MainFrame extends JFrame {
 
             // Left: Title
             JLabel titleLabel = new JLabel("JL Online Store");
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
             titleLabel.setForeground(Color.WHITE);
 
             // Create a panel for the left side containing title, home button and search
@@ -206,7 +206,26 @@ public class MainFrame extends JFrame {
             });
 
             // Search components
-            searchField = new JTextField(20);
+            searchField = new JTextField(18);
+            searchField.setText("Type here to search");
+            searchField.setForeground(Color.GRAY);
+            searchField.addFocusListener(new java.awt.event.FocusAdapter() {
+                @Override
+                public void focusGained(java.awt.event.FocusEvent e) {
+                    if (searchField.getText().equals("Type here to search")) {
+                        searchField.setText("");
+                        searchField.setForeground(Color.BLACK);
+                    }
+                }
+
+                @Override
+                public void focusLost(java.awt.event.FocusEvent e) {
+                    if (searchField.getText().isEmpty()) {
+                        searchField.setText("Type here to search");
+                        searchField.setForeground(Color.GRAY);
+                    }
+                }
+            });
             JButton searchButton = new JButton("Search");
 
             // Add home button and search components to the left panel
@@ -247,11 +266,17 @@ public class MainFrame extends JFrame {
 
             // Search Actions
             searchButton.addActionListener(e -> {
-                performSearch(searchField.getText().trim());
+                String text = searchField.getText().trim();
+                if (!text.equals("Type here to search") && !text.isEmpty()) {
+                    performSearch(text);
+                }
             });
 
             searchField.addActionListener(e -> {
-                performSearch(searchField.getText().trim());
+                String text = searchField.getText().trim();
+                if (!text.equals("Type here to search") && !text.isEmpty()) {
+                    performSearch(text);
+                }
             });
         }
 
@@ -282,6 +307,10 @@ public class MainFrame extends JFrame {
 
         public void clearSearchField() {
             searchField.setText("");
+            if (!searchField.isFocusOwner()) {
+                searchField.setText("Type here to search");
+                searchField.setForeground(Color.GRAY);
+            }
         }
     }
 
