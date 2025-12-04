@@ -3,7 +3,7 @@ package com.comp603.shopping;
 import com.comp603.shopping.gui.MainFrame;
 import javax.swing.SwingUtilities;
 
-public class ShoppingApp {
+public class Main {
     public static void main(String[] args) {
         // Ensure GUI is created on Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
