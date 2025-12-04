@@ -20,6 +20,8 @@ public class ProductDialog extends JDialog {
         super(owner, productToEdit == null ? "Add Product" : "Edit Product", true);
         this.product = productToEdit;
 
+        // Fixed size instead of pack()
+        setSize(600, 450);
         setLayout(new BorderLayout());
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -72,7 +74,11 @@ public class ProductDialog extends JDialog {
                     java.nio.file.Files.copy(selectedFile.toPath(), destPath,
                             java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                     selectedImagePath = "images/" + fileName;
-                    imageLabel.setText(selectedFile.getName());
+
+                    // Update label with truncated path and tooltip
+                    imageLabel.setText(truncateMiddle(selectedFile.getName(), 30));
+                    imageLabel.setToolTipText(selectedImagePath);
+
                 } catch (java.io.IOException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Error uploading image: " + ex.getMessage());
@@ -93,7 +99,7 @@ public class ProductDialog extends JDialog {
 
         cancelButton.addActionListener(e -> dispose());
 
-        pack();
+        // Removed pack() to respect setSize()
         setLocationRelativeTo(owner);
     }
 
@@ -104,9 +110,18 @@ public class ProductDialog extends JDialog {
         stockField.setText(String.valueOf(product.getStockQuantity()));
         selectedImagePath = product.getImagePath();
         if (selectedImagePath != null) {
-            imageLabel.setText(selectedImagePath);
+            imageLabel.setText(truncateMiddle(selectedImagePath, 30));
+            imageLabel.setToolTipText(selectedImagePath);
         }
         categoryCombo.setSelectedItem(product.getCategory());
+    }
+
+    private String truncateMiddle(String text, int maxLen) {
+        if (text == null || text.length() <= maxLen) {
+            return text;
+        }
+        int partLen = (maxLen - 3) / 2;
+        return text.substring(0, partLen) + "..." + text.substring(text.length() - partLen);
     }
 
     private boolean validateFields() {
