@@ -29,7 +29,7 @@ public class ProductDialog extends JDialog {
         priceField = new JTextField();
         stockField = new JTextField();
         categoryCombo = new JComboBox<>(
-                new String[] { "Books", "Sports & Outdoors", "Electronics", "Music", "CDs", "Clothing" });
+                new String[] { "Books", "Sports & Outdoors", "Electronics", "CDs", "Clothing" });
 
         JButton selectImageButton = new JButton("Select Image");
         imageLabel = new JLabel("No image selected");
