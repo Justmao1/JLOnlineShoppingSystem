@@ -108,9 +108,19 @@ public class AdminDashboard extends JPanel {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow >= 0) {
                 int productId = (int) productTableModel.getValueAt(selectedRow, 1); // ID is at index 1 now
-                // Placeholder for delete logic
-                JOptionPane.showMessageDialog(this,
-                        "Delete Product ID: " + productId + " (Not implemented in DAO yet)");
+                int confirm = JOptionPane.showConfirmDialog(this,
+                        "Are you sure you want to delete Product ID: " + productId + "?", "Confirm Delete",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    if (productDAO.deleteProduct(productId)) {
+                        loadProducts();
+                        JOptionPane.showMessageDialog(this, "Product deleted successfully.");
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Failed to delete product. It might be referenced in orders.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Please select a product.");
             }

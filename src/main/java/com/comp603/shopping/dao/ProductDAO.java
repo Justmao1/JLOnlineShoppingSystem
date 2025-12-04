@@ -180,4 +180,17 @@ public class ProductDAO {
             return false;
         }
     }
+
+    public boolean deleteProduct(int productId) {
+        String sql = "DELETE FROM PRODUCTS WHERE PRODUCT_ID = ?";
+        try (Connection conn = DBManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, productId);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
