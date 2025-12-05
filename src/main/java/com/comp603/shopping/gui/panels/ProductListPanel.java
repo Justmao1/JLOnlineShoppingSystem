@@ -20,6 +20,8 @@ public class ProductListPanel extends JPanel {
     private CarouselPanel carouselPanel;
     private String currentSortBy = "PRODUCT_ID"; // Default sort
     private boolean currentAscending = true; // Default order
+    private java.util.List<Product> currentProducts;
+    private boolean isFiltered = false;
 
     public ProductListPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -165,9 +167,14 @@ public class ProductListPanel extends JPanel {
     }
 
     public void updateProductList(List<Product> products) {
-        productContainer.removeAll();
+        this.currentProducts = products;
+        this.isFiltered = true;
+        renderProducts(products);
+    }
 
-        if (products.isEmpty()) {
+    private void renderProducts(List<Product> products) {
+        productContainer.removeAll();
+        if (products == null || products.isEmpty()) {
             JLabel notFoundLabel = new JLabel("No products found.");
             notFoundLabel.setFont(new Font("Arial", Font.BOLD, 18));
             notFoundLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -183,15 +190,45 @@ public class ProductListPanel extends JPanel {
     }
 
     public void refreshProducts() {
-        List<Product> productList;
+        if (isFiltered && currentProducts != null) {
+            java.util.List<Product> list = new java.util.ArrayList<>(currentProducts);
+            java.util.Comparator<Product> comp;
+            switch (currentSortBy) {
+                case "PRICE":
+                    comp = java.util.Comparator.comparingDouble(Product::getPrice);
+                    break;
+                case "SALES_VOLUME":
+                    comp = java.util.Comparator.comparingInt(Product::getSalesVolume);
+                    break;
+                default:
+                    comp = java.util.Comparator.comparingInt(Product::getProductId);
+                    break;
+            }
+            if (!currentAscending) {
+                comp = comp.reversed();
+            }
+            list.sort(comp);
+            this.currentProducts = list;
+            renderProducts(list);
+            setCarouselVisible(false);
+            return;
+        }
+
+        java.util.List<Product> productList;
         if ("PRODUCT_ID".equals(currentSortBy)) {
-            // Default sorting (as originally implemented)
             productList = productDAO.getAllProducts();
         } else {
-            // Sorted products
             productList = productDAO.getAllProductsSorted(currentSortBy, currentAscending);
         }
-        updateProductList(productList);
+        this.currentProducts = null;
+        this.isFiltered = false;
+        renderProducts(productList);
+        setCarouselVisible(true);
+    }
+
+    public void clearFilter() {
+        this.isFiltered = false;
+        this.currentProducts = null;
         setCarouselVisible(true);
     }
 

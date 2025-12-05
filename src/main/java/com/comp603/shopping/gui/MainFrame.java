@@ -168,7 +168,9 @@ public class MainFrame extends JFrame {
     public void refreshView() {
         for (Component comp : mainPanel.getComponents()) {
             if (comp instanceof ProductListPanel) {
-                ((ProductListPanel) comp).refreshProducts();
+                ProductListPanel panel = (ProductListPanel) comp;
+                panel.clearFilter();
+                panel.refreshProducts();
             }
         }
     }
