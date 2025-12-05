@@ -1,105 +1,183 @@
-# Online Shopping System (COMP603 Project)
+# JL Online Shopping System (COMP603 Project)
 
-![Java](https://img.shields.io/badge/Java-21-orange)
-![Maven](https://img.shields.io/badge/Maven-3.x-blue)
-![Swing](https://img.shields.io/badge/GUI-Swing-green)
-![Derby](https://img.shields.io/badge/Database-Apache%20Derby-red)
+A comprehensive desktop-based Online Shopping System commissioned for the **COMP603 Program Design & Construction** course. This project allows users to browse products, manage a shopping cart, and process secure payments, while providing administrators with powerful tools for inventory and order management.
 
-A comprehensive desktop-based Online Shopping System developed for the **COMP603 Program Design & Construction** course. This project demonstrates the application of **Object-Oriented Programming (OOP)** principles, **Java Swing GUI**, and **Embedded Database** integration, strictly adhering to the course requirements.
+**Team**: Group of 4
+**Course**: COMP603 Program Design & Construction
+**Project**: Online Shopping System (Java/Swing/Derby)
 
-## 📋 Project Overview
+---
 
-This application allows users to browse products, manage a shopping cart, and place orders, while providing administrators with tools to manage inventory. It is designed to be **robust, bug-free, and easy to run** without manual configuration.
+## 1. Title and Overview
 
-### Key Features
-*   **User Interface (GUI)**: A user-friendly Swing interface with distinct panels for Login, Product Browsing, Cart, and Admin Dashboard.
-*   **Database Integration**: Uses **Apache Derby (Embedded)** for persistent storage of Users, Products, and Orders. The database is **automatically initialized** on the first run (Zero-Configuration).
-*   **Functionality**:
-    *   **Authentication**: Secure login/register for Customers and Admins.
-    *   **Shopping**: Add/remove items, view cart, and checkout.
-    *   **Admin Tools**: Add/Edit/Delete products and manage orders.
-*   **Unit Testing**: Includes **JUnit 5** test cases covering critical business logic (Authentication, Cart calculations, Models).
+### **JL Online Shopping System**
+The **JL Online Shopping System** is a robust Java Swing application designed to simulate a real-world e-commerce platform. It seamlessly connects Customers with Products through an intuitive interface, backed by a persistent embedded database.
 
-## 🛠 Technical Highlights (Marking Criteria)
+**Key Goals:**
+*   To demonstrate advanced **Object-Oriented Programming (OOP)** concepts.
+*   To implement a **User-Friendly GUI** using Java Swing.
+*   To ensure **Data Persistence** using an embedded Apache Derby database.
+*   To adhere to **SOLID Principles** and **Design Patterns** for maintainable code.
 
-This project implements the following technical requirements:
+---
 
-### 1. Object-Oriented Design
-*   **Encapsulation**: All models (`User`, `Product`) use private fields with public getters/setters.
-*   **Inheritance**: `PhysicalProduct` and `DigitalProduct` extend the abstract `Product` class.
-*   **Polymorphism**: The `PaymentStrategy` interface allows different payment behaviors (`CreditCardStrategy`, `WalletStrategy`) to be used interchangeably.
+## 2. Features & Functionality
+*(Addressing 'Software Functionality and Usability' Rubric)*
+
+This application supports two distinct user roles: **Customer** and **Admin**, each with tailored functionality.
+
+### **Core Features:**
+*   **User Authentication**: Secure Login and Registration system with input validation and role-based access control.
+*   **Product Management (Admin)**: Full CRUD (Create, Read, Update, Delete) capabilities for managing inventory, including image support and categories.
+*   **Shopping Experience (Customer)**:
+    *   **Browsing**: View products with details, images, and prices.
+    *   **Search & Filter**: Find products by name or category.
+    *   **Shopping Cart**: Add items, update quantities, and remove items with real-time total calculation.
+    *   **Wishlist**: Save items for later.
+*   **Checkout System**:
+    *   Multiple Payment Methods: **Credit Card** and **Digital Wallet**.
+    *   Order History: View past orders and status.
+*   **Admin Dashboard**: comprehensive view of all products and system status.
+
+### **Complexity & Usability:**
+*   **Robust Error Handling**: The application is designed to never crash. Invalid inputs (e.g., negative text in price fields, SQL injection attempts) are caught and handled with user-friendly error messages (pop-ups). IOExceptions and SQLExceptions are logged and managed gracefully.
+*   **Dynamic UI**: The interface uses `GridBagLayout` and custom renderers to adapt to different window sizes and data states.
+
+---
+
+## 3. Setup and Installation
+*(Addressing 'Ease of Use' Rubric)*
+
+This project is configured for **Zero-Configuration** execution.
+
+### **Prerequisites**
+*   **JDK 21** or higher
+*   **NetBeans IDE 23** (Recommended) or any Maven-compatible IDE
+*   **Maven** 3.x
+
+### **Step-by-Step Guide**
+
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/Justmao1/JLOnlineShoppingSystem.git
+    ```
+
+2.  **Open in NetBeans**
+    *   Launch NetBeans 23.
+    *   Go to `File` -> `Open Project`.
+    *   Select the `JLOnlineShoppingSystem` folder (Maven icon).
+
+3.  **Run the Application**
+    *   Right-click the project -> `Clean and Build`.
+    *   Right-click the project -> `Run`.
+    *   *Alternative (Terminal)*:
+        ```bash
+        mvn clean install
+        mvn exec:java -Dexec.mainClass="com.comp603.shopping.Main"
+        ```
+
+**✅ Automatic Setup**: The database (`shopping_db`) is **automatically created and populated** with seed data on the first launch. No manual SQL scripts or JAR imports are needed.
+
+### **Login Credentials**
+Use these default accounts to test the system:
+
+| Role | Username | Password |
+| :--- | :--- | :--- |
+| **Admin** | `admin` | `admin123` |
+| **Customer** | `user123` | `user12345` |
+
+---
+
+## 4. Database Design and Interaction
+*(Addressing 'Database' Rubric)*
+
+### **Database Engine**
+*   **Apache Derby (JavaDB)**: Used in **Embedded Mode**. The database files reside locally within the project directory, ensuring portability.
+
+### **Database Structure**
+The system uses a Relational Schema with the following key tables:
+*   **USERS**: Stores user credentials, roles, and wallet balances.
+*   **PRODUCTS**: Stores item details, stock levels, prices, and categories.
+*   **ORDERS**: Tracks order IDs, dates, and total amounts.
+*   **ORDER_ITEMS**: Links Orders to Products (Many-to-Many relationship).
+*   **WISHLIST**: Stores user's saved items.
+
+### **Interaction & Operations**
+*   **JDBC (Java Database Connectivity)**: All interactions are handled via standard JDBC.
+*   **DBManager**: A Singleton class that handles connection pooling and schema initialization.
+*   **Data Access Objects (DAOs)**: Each entity (`User`, `Product`, `Order`) has a dedicated DAO class to handle SQL operations, keeping the business logic clean.
+
+---
+
+## 5. Software Design & Implementation
+*(Addressing 'Software Design & Implementation' Rubric)*
+
+The project follows a **Layered Architecture** (Presentation, logic, Data Access), promoting Separation of Concerns.
+
+### **Class Structure & Design Patterns**
+*   **MVC Applied**:
+    *   **Views**: Swing Panels (`LoginPanel`, `ProductListPanel`) in `views` package.
+    *   **Models**: POJOs (`User`, `Product`) in `models` package.
+    *   **Controllers**: Services (`AuthService`, `ProductService`) handling logic.
 *   **Design Patterns**:
-    *   **DAO Pattern**: Separates data access logic (`UserDAO`, `ProductDAO`) from business logic.
-    *   **Strategy Pattern**: Used for the payment system.
-    *   **Singleton/Static Factory**: Used in `DBManager` for database connections.
+    *   **Singleton Pattern**: Applied in `DBManager` to ensure a single database connection instance.
+    *   **Strategy Pattern**: Used for `PaymentStrategy` interface, allowing interchangeable payment implementations (`CreditCardStrategy`, `WalletStrategy`).
+    *   **DAO Pattern**: Separates data persistence from the rest of the app (`ProductDAO`, `UserDAO`).
 
-### 2. Database
-*   **DBMS**: Apache Derby (v10.15.2.0).
-*   **Connection**: JDBC is used for all database interactions.
-*   **Auto-Setup**: `DBManager` checks for table existence and runs `schema.sql` automatically.
+### **Object-Oriented Concepts**
+1.  **Encapsulation**: All fields in model classes (e.g., `Product.price`, `User.password`) are `private` and accessed via public Getters/Setters.
+2.  **Abstraction**: `PaymentStrategy` interface abstracts the payment processing logic.
+3.  **Inheritance**: GUI components extend Swing classes (e.g., `class WalletPanel extends JPanel`).
+4.  **Polymorphism**: The `CheckoutService` accepts any `PaymentStrategy`, demonstrating polymorphic behavior—treating different payment methods uniformly.
 
-### 3. Quality & Robustness
-*   **Error Handling**: Comprehensive `try-catch` blocks for SQL and IO exceptions.
-*   **Input Validation**: GUI forms validate user input (e.g., non-empty fields, numeric prices) before processing.
+### **Coding Standards**
+*   **Code Style**: Follows standard Java naming conventions (CamelCase for methods/vars, PascalCase for classes).
+*   **Git/GitHub**: Version control was strictly applied, with granular commits for each feature implementation.
 
-## 🚀 Quick Start
+---
 
-### Prerequisites
-*   **JDK 21** (Required).
-*   **Maven** (Recommended for building).
-*   *Compatible with NetBeans 23.*
+## 6. User Interface (GUI)
+*(Addressing 'User Interface' Rubric)*
 
-### How to Run
-1.  **Clone the repository**:
-    ```bash
-    git clone <repository-url>
-    cd my_onlineshopingSystem
-    ```
+*   **Design Philosophy**: "Clean, Modern, and Responsive".
+*   **Implementation**: Used Java Swing with customized components.
+*   **Layouts**: Extensively used `GridBagLayout` and `BorderLayout` to ensure the application looks good on any screen size.
+*   **Feedback**: Visual feedback (Dialogs, Status Labels) is provided for every user action (e.g., "Added to Cart", "Payment Successful").
 
-2.  **Build the project**:
-    ```bash
-    mvn clean install
-    ```
+---
 
-3.  **Run the application**:
-    ```bash
-    mvn exec:java -Dexec.mainClass="com.comp603.shopping.ShoppingApp"
-    ```
-    *Note: The `shopping_db` folder will be automatically created in the project root.*
+## 7. Unit Testing
+*(Addressing 'Unit Testing' Rubric)*
 
-## 🧪 Testing
+The project uses the **JUnit 5 Framework** to ensure reliability. Over 5 critical test cases are implemented:
 
-The project includes **14 Unit Tests** (exceeding the minimum of 5) covering:
-*   `AuthServiceTest`: Login, Registration, Logout logic.
-*   `ProductTest`: Model integrity and inheritance.
-*   `ShoppingCartTest`: Total calculation and item management.
-*   `WalletStrategyTest`: Payment logic.
+1.  **`AuthServiceTest`**: Verifies login logic, password validation, and user registration.
+2.  **`ShoppingCartTest`**: Tests adding items, calculating totals, and clearing the cart.
+3.  **`WalletStrategyTest`**: tests the deduction of funds and insufficient balance handling.
+4.  **`ProductTest`**: Tests product model integrity and validation.
+5.  **`UserTest`**: Verifies user data handling and role assignment.
 
-Run tests using:
-```bash
-mvn test
-```
+---
 
-## 📂 Project Structure
-
-*   `com.comp603.shopping`
-    *   `gui/`: Swing UI components (MainFrame, Panels, Dialogs).
-    *   `models/`: Domain entities (User, Product, Order).
-    *   `dao/`: Data Access Objects (JDBC implementation).
-    *   `services/`: Business logic and Strategies.
-    *   `config/`: Database configuration (`DBManager`).
-
-## 👥 Contribution
-
-**Group ID**: [Your Group ID]
+## 8. Group Contribution
 
 | Student ID | Name | Contribution |
 | :--- | :--- | :--- |
-| [ID 1] | [Name 1] | [Brief description of work] |
-| [ID 2] | [Name 2] | [Brief description of work] |
+| **[Student ID]** | **Justmao1** | **Core Architecture**: Implemented the main Checkout flow, Wallet system, and Product List panel. Integrated Payment System and handled major refactoring. |
+| **[Student ID]** | **Changpeng Shi** | **Database & Assets**: Managed `schema.sql`, database seeding, and product assets. Implemented product filtering/sorting. |
+| **[Student ID]** | **fhhhz-todd** | **GUI Customization**: Implemented custom Cart Dialog, improved layouts, and JTable rendering. |
+| **[Student ID]** | **kekepepe** | **User Management**: Implemented Registration Dialog, Header panel refactoring, and client-side validation. |
 
-*(Update this table with your actual group details)*
+*(Please see the attached `contribution.pdf` for full details)*
 
-## 📜 License
+---
 
-This project is for educational purposes under the COMP603 course at AUT.
+## 9. AI/ChatGPT Usage
+
+**Disclaimer**: ChatGPT and AI tools were used in this project for **learning and debugging purposes only**.
+
+*   **Debugging**: Used to interpret complex SQL error messages (e.g., Derby syntax errors).
+*   **Boilerplate**: Assisted in generating getters/setters and basic Swing layout boilerplate code.
+*   **Logic**: No core business logic or complex algorithms were generated by AI. All logic was reviewed and refactored by the team.
+
+**We confirm that the design and implementation are our own work.**
