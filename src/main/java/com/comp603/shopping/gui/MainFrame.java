@@ -178,6 +178,8 @@ public class MainFrame extends JFrame {
         private JLabel welcomeLabel;
         private JButton cartButton;
         private JTextField searchField;
+        private JButton categoryButton;
+        private JPopupMenu categoryMenu;
         private JButton loginButton;
         private JButton myAccountButton;
 
@@ -204,6 +206,7 @@ public class MainFrame extends JFrame {
                 showCard("PRODUCTS");
                 refreshView();
                 clearSearchField(); // Clear search field when going home
+                categoryButton.setText("ALL ▼");
             });
 
             // Search components
@@ -229,10 +232,26 @@ public class MainFrame extends JFrame {
             });
             JButton searchButton = new JButton("Search");
 
-            // Add home button and search components to the left panel
+            categoryButton = new JButton("ALL ▼");
+            categoryMenu = new JPopupMenu();
+            String[] categories = new String[] { "All", "Books", "Sports & Outdoors", "Electronics", "CDs", "Clothing" };
+            for (String c : categories) {
+                JMenuItem item = new JMenuItem(c);
+                item.addActionListener(e -> applyCategory(c));
+                categoryMenu.add(item);
+            }
+            categoryButton.addActionListener(e -> {
+                categoryMenu.show(categoryButton, 0, categoryButton.getHeight());
+            });
+
+            JPanel searchGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            searchGroup.setOpaque(false);
+            searchGroup.add(categoryButton);
+            searchGroup.add(searchField);
+            searchGroup.add(searchButton);
+
             leftPanel.add(homeButton);
-            leftPanel.add(searchField);
-            leftPanel.add(searchButton);
+            leftPanel.add(searchGroup);
 
             add(leftPanel, BorderLayout.WEST);
 
@@ -280,6 +299,16 @@ public class MainFrame extends JFrame {
                     performSearch(text);
                 }
             });
+        }
+
+        private void applyCategory(String category) {
+            if ("All".equals(category)) {
+                MainFrame.this.refreshView();
+                categoryButton.setText("ALL ▼");
+                return;
+            }
+            categoryButton.setText(category);
+            MainFrame.this.performSearch(category);
         }
 
         public void updateUser(String username) {
