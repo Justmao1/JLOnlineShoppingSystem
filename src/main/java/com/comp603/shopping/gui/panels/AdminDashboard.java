@@ -121,9 +121,17 @@ public class AdminDashboard extends JPanel {
                         JOptionPane.showMessageDialog(this, "Product deleted successfully.");
                     } catch (java.sql.SQLException ex) {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(this,
-                                "Failed to delete product: " + ex.getMessage(), "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                        String message = ex.getMessage();
+                        if (message != null && (message.contains("foreign key") || message.contains("constraint"))) {
+                            JOptionPane.showMessageDialog(this,
+                                    "Cannot delete this product because it is associated with existing orders or other data.",
+                                    "Deletion Failed",
+                                    JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Failed to delete product: " + ex.getMessage(), "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             } else {
