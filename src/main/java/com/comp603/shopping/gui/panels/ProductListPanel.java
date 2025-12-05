@@ -28,12 +28,11 @@ public class ProductListPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        // Fetch products for carousel (e.g., first 5)
+        // Fetch products for carousel (Use all products for random display)
         List<Product> allProducts = productDAO.getAllProducts();
-        List<Product> hotProducts = allProducts.size() > 5 ? allProducts.subList(0, 5) : allProducts;
 
         // Carousel
-        carouselPanel = new CarouselPanel(hotProducts);
+        carouselPanel = new CarouselPanel(allProducts);
 
         // Create sorting panel
         JPanel sortPanel = createSortPanel();
@@ -51,24 +50,26 @@ public class ProductListPanel extends JPanel {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBackground(Color.WHITE);
         contentPanel.add(carouselPanel);
-        
+
         // Add some vertical spacing between carousel and sort panel
         contentPanel.add(Box.createVerticalStrut(10));
         contentPanel.add(sortPanel);
-        
+
         // Add smaller vertical spacing between sort panel and products
         JPanel spacer = new JPanel();
         spacer.setBackground(Color.WHITE);
         spacer.setMaximumSize(new Dimension(Integer.MAX_VALUE, 5)); // Reduced from 10 to 5
         contentPanel.add(spacer);
-        
+
         // Wrap the product container in a panel that will expand
         JPanel productWrapper = new JPanel(new BorderLayout());
         productWrapper.setBackground(Color.WHITE);
         productWrapper.add(productContainer, BorderLayout.NORTH);
-        
+
         // Main panel that holds fixed height components and expanding product area
-        JPanel mainContent = new JPanel(new BorderLayout());
+        // Main panel that holds fixed height components and expanding product area
+        // Use a custom ScrollablePanel to ensure it tracks viewport width
+        ScrollablePanel mainContent = new ScrollablePanel(new BorderLayout());
         mainContent.setBackground(Color.WHITE);
         mainContent.add(contentPanel, BorderLayout.NORTH);
         mainContent.add(productWrapper, BorderLayout.CENTER);
@@ -79,6 +80,47 @@ public class ProductListPanel extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Disable horizontal scroll
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         add(scrollPane, BorderLayout.CENTER);
+
+        // Add listener to revalidate when resized (crucial for WrapLayout)
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                productContainer.revalidate();
+                productContainer.repaint();
+            }
+        });
+    }
+
+    // Custom panel that implements Scrollable to force width to match viewport
+    private class ScrollablePanel extends JPanel implements Scrollable {
+        public ScrollablePanel(LayoutManager layout) {
+            super(layout);
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 16;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 16;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return true; // Force width to match viewport
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return false; // Allow height to expand
+        }
     }
 
     private JPanel createSortPanel() {
@@ -86,8 +128,8 @@ public class ProductListPanel extends JPanel {
         sortPanel.setBackground(Color.WHITE);
 
         JLabel sortByLabel = new JLabel("Sort by:");
-        JComboBox<String> sortByCombo = new JComboBox<>(new String[]{"Price", "Sales Volume"});
-        JComboBox<String> orderCombo = new JComboBox<>(new String[]{"Ascending", "Descending"});
+        JComboBox<String> sortByCombo = new JComboBox<>(new String[] { "Price", "Sales Volume" });
+        JComboBox<String> orderCombo = new JComboBox<>(new String[] { "Ascending", "Descending" });
         JButton sortButton = new JButton("Apply Sort");
 
         sortPanel.add(sortByLabel);
@@ -100,7 +142,7 @@ public class ProductListPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String selectedSort = (String) sortByCombo.getSelectedItem();
                 boolean ascending = "Ascending".equals(orderCombo.getSelectedItem());
-                
+
                 // Map user-friendly names to database column names
                 switch (selectedSort) {
                     case "Price":
@@ -113,7 +155,7 @@ public class ProductListPanel extends JPanel {
                         currentSortBy = "PRODUCT_ID"; // Default
                         break;
                 }
-                
+
                 currentAscending = ascending;
                 refreshProducts();
             }
