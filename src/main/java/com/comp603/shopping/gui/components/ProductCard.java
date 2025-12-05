@@ -123,8 +123,8 @@ public class ProductCard extends JPanel {
         priceLabel.setForeground(new Color(220, 20, 60)); // Crimson Red
         priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Stock
-        JLabel stockLabel = new JLabel("Stock: " + product.getStockQuantity());
+        // Sales Volume
+        JLabel stockLabel = new JLabel("Sales Volume: " + product.getSalesVolume());
         stockLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         stockLabel.setForeground(Color.GRAY);
         stockLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
