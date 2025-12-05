@@ -9,8 +9,12 @@ public class WalletStrategy implements PaymentStrategy {
     private UserDAO userDAO;
 
     public WalletStrategy(User user) {
+        this(user, new UserDAO());
+    }
+
+    public WalletStrategy(User user, UserDAO userDAO) {
         this.user = user;
-        this.userDAO = new UserDAO();
+        this.userDAO = userDAO;
     }
 
     @Override
