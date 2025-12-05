@@ -21,7 +21,10 @@ public class ProductDetailsDialog extends JDialog {
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         imageLabel.setVerticalAlignment(SwingConstants.CENTER);
         imageLabel.setOpaque(false);
-        imageLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        int padding = 8;
+        imageLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+                new EmptyBorder(padding, padding, padding, padding)));
 
         if (product.getImagePath() != null) {
             java.io.File imgFile = new java.io.File(product.getImagePath());
@@ -29,8 +32,8 @@ public class ProductDetailsDialog extends JDialog {
                 ImageIcon icon = new ImageIcon(product.getImagePath());
                 int iw = icon.getIconWidth();
                 int ih = icon.getIconHeight();
-                int maxW = 250;
-                int maxH = 300;
+                int maxW = 250 - padding * 4;
+                int maxH = 300 - padding * 4;
                 double r = Math.min((double) maxW / iw, (double) maxH / ih);
                 int nw = Math.max(1, (int) (iw * r));
                 int nh = Math.max(1, (int) (ih * r));
