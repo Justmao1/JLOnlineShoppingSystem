@@ -58,6 +58,7 @@ public class ProductDetailsDialog extends JDialog {
         nameArea.setLineWrap(true);
         nameArea.setEditable(false);
         nameArea.setOpaque(false);
+        nameArea.setFocusable(false);
         nameArea.setFont(new Font("Arial", Font.BOLD, 24));
         nameArea.setAlignmentX(Component.LEFT_ALIGNMENT);
         nameArea.setToolTipText(product.getName());
