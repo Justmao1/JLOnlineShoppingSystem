@@ -90,13 +90,20 @@ public class CarouselPanel extends JPanel {
     }
 
     private void showNext() {
-        currentIndex = (currentIndex + 1) % products.size();
-        updateDisplay();
+        // Randomly select next product
+        if (products.size() > 1) {
+            int newIndex;
+            do {
+                newIndex = (int) (Math.random() * products.size());
+            } while (newIndex == currentIndex); // Ensure it's a different product
+            currentIndex = newIndex;
+            updateDisplay();
+        }
     }
 
     private void showPrevious() {
-        currentIndex = (currentIndex - 1 + products.size()) % products.size();
-        updateDisplay();
+        // For random carousel, "previous" can also just be a random new one
+        showNext();
     }
 
     private void updateDisplay() {
