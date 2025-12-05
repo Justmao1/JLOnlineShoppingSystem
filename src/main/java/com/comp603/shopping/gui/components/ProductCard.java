@@ -25,7 +25,7 @@ public class ProductCard extends JPanel {
 
         // Image Panel
         JPanel imagePanel = new JPanel(new BorderLayout());
-        imagePanel.setBackground(new Color(230, 230, 250)); // Lavender background
+        imagePanel.setBackground(Color.WHITE);
         imagePanel.setPreferredSize(new Dimension(180, 150));
         imagePanel.setMaximumSize(new Dimension(180, 150));
         imagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
