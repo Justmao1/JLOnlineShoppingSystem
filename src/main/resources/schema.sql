@@ -104,29 +104,66 @@ CREATE TABLE PAYMENT_METHODS (
 
 
 
+
+
 -- Seed Data (Synced from Local DB)
 INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, PHONE, ROLE, BALANCE, CREATED_DATE) VALUES (1, 'admin', 'admin123', 'admin@store.com', NULL, 'ADMIN', 1000.00, '2025-12-03 13:59:42.598');
 INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, PHONE, ROLE, BALANCE, CREATED_DATE) VALUES (2, 'user123', 'user12345', 'user@store.com', NULL, 'CUSTOMER', 1050.00, '2025-12-03 13:59:42.6');
-
+INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, PHONE, ROLE, BALANCE, CREATED_DATE) VALUES (3, 'pupu', '111', 'pupu@example.com', NULL, 'CUSTOMER', 98.03, '2025-12-03 14:02:18.131');
 
 INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (1, 'Java Programming Book', 'Comprehensive guide to Java 21', 59.99, 110, 'Books', 10, 'images/1764838175752_CleanShot 2025-12-04 at 10.34.12@2x.png');
-INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (2, 'Mechanical Keyboard', 'Clicky keys for coding', 120.50, 2, 'Electronics', 50, NULL);
-INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (3, 'IntelliJ IDEA License', '1-year subscription', 149.00, 984, 'Electronics', 100, 'images/1764814219318_CleanShot 2025-12-04 at 10.09.41@2x.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (2, 'Mechanical Keyboard', 'Clicky keys for coding', 1388.00, 2, 'Electronics', 50, 'images/1764863394351_键盘.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (3, 'IntelliJ IDEA License', '1-year subscription', 149.00, 984, 'Electronics', 100, 'images/1764868613225_logo_intellij-idea_square.png');
 INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (4, 'Design Patterns E-Book', 'PDF version of GoF book', 29.99, 989, 'Books', 20, NULL);
 INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (5, 'Running Shoes', 'Comfortable running shoes', 89.99, 50, 'Sports & Outdoors', 5, 'images/1764741696924_phone.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (6, 'Brimstone (Deluxe Edition)', 'This limited deluxe edition with metallic edges, gorgeous cover effects, designed endpapers, and a stamped foil case continues the epic story begun in runaway bestseller and global phenomenon Quicksilver. ', 38.49, 56, 'Books', 0, 'images/1764866791993_图片1.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (107, 'Wilson NBA Basketball', 'Wilson NBA DRV Series Basketball - DRV, Brown, Mini - 22" NBA OFFICIAL: Wilson is the official basketball of the NBA. This ball features official NBA branding coupled with the iconic Wilson script', 129.00, 70, 'Sports & Outdoors', 0, 'images/1764867071553_篮球.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (108, 'Dog Man: Big Jim Believes', 'Power up with Dog Man: Big Jim Believes from the global #1 bestselling author and award-winning artist Dav Pilkey. Join the journey as our heroes discover the influence of belief and find truth from within. ', 20.59, 88, 'Books', 0, 'images/1764867196457_图片2.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (109, 'The Housemaid', '“Welcome to the family,” Nina Winchester says as I shake her elegant, manicured hand. I smile politely, gazing around the marble hallway. Working here is my last chance to start fresh. ', 75.33, 20, 'Books', 0, 'images/1764867292007_图片3.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (110, 'Call of the Camino', 'From the bestselling author of In an Instant comes a deeply moving novel following the transformative journeys of two women walking entwined paths on a legendary route across Europe a generation apart.', 36.89, 23, 'Books', 0, 'images/1764867338083_图片4.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (111, 'Best Offer Wins', 'A Good Morning America Book Club Pick * A Good Housekeeping Book Club Pick * An ELLE Best Mystery/Thriller of 2025 * A BookRiot Best Mystery/Thriller of 2025', 45.99, 106, 'Books', 0, 'images/1764867381898_图片5.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (112, 'Quicksilver', 'This #1 New York Times bestseller is a highly addicting enemies-to-lovers Romantasy with razor-sharp banter, heart-stopping action, and blistering hot romance.', 67.89, 256, 'Books', 0, 'images/1764867451570_图片6.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (113, 'A Million Times, Yes', 'The only way an alpha billionaire can hold on to the perfect woman is to keep his identity a secret in an emotional and blisteringly hot romance by USA Today bestselling author Marni Mann.', 34.12, 44, 'Books', 0, 'images/1764867501072_图片7.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (114, 'Spalding Portable Hoop', 'Assembles in 30 minutes or less 54" Performance H-Frame acrylic board with arena-style padding Steel board frame Pro Slam breakaway rim 8'' to 10'' height adjustment', 278.69, 17, 'Sports & Outdoors', 0, 'images/1764867548130_图片8.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (116, 'Franklin Soccer Goal', 'BACKYARD SOCCER GOALS: The Blackhawk Pop Up Soccer Goals are designed to help all players turn any backyard into their own personal soccer pitch in no time to train their skills or play short sided games with friends', 125.99, 200, 'Sports & Outdoors', 0, 'images/1764867631959_图片9.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (118, 'Size 5 Soccer Ball', 'Enhanced Grip & Control: The textured surface of the soccer ball reduces turbulence, making it easier to control and pass the ball with precision. Perfect for players who value accuracy in every pass and shot', 108.79, 666, 'Sports & Outdoors', 0, 'images/1764867741748_图片10.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (119, 'Champion Sports Weighted Football', 'Weighted training football is great for increasing arm strength, option pitching and increasing grip for receivers Features an easy to grip textured cover', 89.99, 247, 'Sports & Outdoors', 0, 'images/1764867795970_图片11.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (120, 'Neoprene Dumbbells', '2 pound dumbbell (set of 2) for exercise and strength training Neoprene texture in Pink offers long lasting durability', 69.88, 100, 'Sports & Outdoors', 0, 'images/1764867853479_图片12.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (121, 'HILAND 700C Road Bike', 'Lightweight Frame: The road bike is designed for people who like to ride or use it for daily commuting, The aluminium frame is lightweight, stiff, durable and capable of higher speeds', 799.99, 17, 'Sports & Outdoors', 0, 'images/1764867928151_图片13.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (122, 'Apple AirPods (3rd Generation) Wireless Ear Buds', 'SWEAT AND WATER PROTECTION — AirPods and the Lightning Charging Case is rated IPX4 sweat and water resistant, so they’ll withstand anything from heavy workouts to rain', 1899.00, 233, 'Electronics', 0, 'images/1764867999961_图片14.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (123, 'Apple AirPods Max Wireless Over-Ear Headphones', 'FOCUS ON WHAT’S PLAYING — Active Noise Cancellation blocks outside noise so you can immerse yourself in music.', 2499.00, 255, 'Electronics', 0, 'images/1764868040602_图片15.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (124, 'Sony WH-CH520 Wireless Headphones', 'HIGH QUALITY SOUND: Great sound quality customizable to your music preference with EQ Custom on the Sony | Headphones Connect App.', 1999.00, 477, 'Electronics', 0, 'images/1764868128228_图片16.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (125, 'Apple iPhone 14 (Renewed), 128GB, Midnight', 'This phone is unlocked and compatible with any carrier of choice on GSM and CDMA networks (e.g. AT&T, T-Mobile, Sprint, Verizon, US Cellular, Cricket, Metro, Tracfone, Mint Mobile, etc.).', 6499.00, 236, 'Electronics', 0, 'images/1764868181473_图片17.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (126, 'The Life of a Showgirl (Vinyl)', 'Taylor Swift''s 12th studio album, The Life of a Showgirl, will be released worldwide October 3, 2025. The LP includes 12 songs', 249.00, 200, 'CDs', 0, 'images/1764868234982_图片18.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (127, 'Vinyl Record Player', 'Build-in Bluetooth receiving function allows you connect to Bluetooth devices wirelessly such as smartphone, tablets, and playback streaming music via turntable''s built-in speakers. ', 599.00, 698, 'CDs', 0, 'images/1764868280043_图片19.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (128, 'Thriller Vinyl', 'Thriller changed pop music forever.', 129.00, 203, 'CDs', 0, 'images/1764868336845_图片20.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (129, 'HIT ME HARD AND SOFT (LP)', 'Billie Eilish''s third studio album, HIT ME HARD AND SOFT, released via Darkroom/Interscope', 289.00, 321, 'CDs', 0, 'images/1764868382013_图片21.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (130, 'Sling Audio CD', 'Clairo has revealed her new single, "Blouse," as well as the news of her forthcoming sophomore studio album, Sling', 69.00, 108, 'CDs', 0, 'images/1764868424090_图片22.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (131, 'Charm Audio CD', '2024 release. Charm is the third studio album by American singer-songwriter Clairo.', 118.00, 206, 'CDs', 0, 'images/1764868502465_图片23.png');
+INSERT INTO PRODUCTS (PRODUCT_ID, NAME, DESCRIPTION, PRICE, STOCK_QUANTITY, CATEGORY, SALES_VOLUME, IMAGE_PATH) VALUES (132, 'Hanes Men''s Pocket T-Shirt', 'KEEP YOUR COOL - Cool Comfort moisture-wicking fabric wicks away moisture so you''ll stay cool and comfy in this men''s t-shirt.', 59.00, 426, 'Clothing', 0, 'images/1764868560961_图片24.png');
 
-
+INSERT INTO ORDERS (ORDER_ID, USER_ID, TOTAL_AMOUNT, STATUS, ORDER_DATE) VALUES (1, 3, 4414.35, 'SHIPPED', '2025-12-03 15:15:57.204');
+INSERT INTO ORDERS (ORDER_ID, USER_ID, TOTAL_AMOUNT, STATUS, ORDER_DATE) VALUES (101, 3, 1807.50, 'SHIPPED', '2025-12-03 15:33:00.329');
+INSERT INTO ORDERS (ORDER_ID, USER_ID, TOTAL_AMOUNT, STATUS, ORDER_DATE) VALUES (201, 3, 4901.96, 'PAID', '2025-12-03 15:50:11.298');
 INSERT INTO ORDERS (ORDER_ID, USER_ID, TOTAL_AMOUNT, STATUS, ORDER_DATE) VALUES (301, 2, 2077.00, 'PAID', '2025-12-04 10:05:13.486');
 INSERT INTO ORDERS (ORDER_ID, USER_ID, TOTAL_AMOUNT, STATUS, ORDER_DATE) VALUES (401, 2, 149.00, 'PAID', '2025-12-04 19:01:29.927');
 INSERT INTO ORDERS (ORDER_ID, USER_ID, TOTAL_AMOUNT, STATUS, ORDER_DATE) VALUES (501, 2, 59.99, 'PAID', '2025-12-04 19:08:06.707');
 
-
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (1, 1, 1, 5, 59.99);
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (2, 1, 2, 15, 120.50);
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (3, 1, 4, 10, 29.99);
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (4, 1, 5, 1, 666.00);
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (5, 1, 3, 9, 149.00);
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (101, 101, 2, 15, 120.50);
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (201, 201, 1, 4, 59.99);
+INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (202, 201, 5, 7, 666.00);
 INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (301, 301, 3, 5, 149.00);
 INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (302, 301, 5, 2, 666.00);
 INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (401, 401, 3, 1, 149.00);
 INSERT INTO ORDER_ITEMS (ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE_AT_PURCHASE) VALUES (501, 501, 1, 1, 59.99);
 
-
+INSERT INTO WISHLIST (WISHLIST_ID, USER_ID, PRODUCT_ID) VALUES (1, 3, 1);
+INSERT INTO WISHLIST (WISHLIST_ID, USER_ID, PRODUCT_ID) VALUES (101, 3, 5);
 
 INSERT INTO PAYMENT_METHODS (PAYMENT_METHOD_ID, USER_ID, CARD_NUMBER, EXPIRY_DATE) VALUES (1, 2, '123321', '22/33');
 
@@ -134,7 +171,8 @@ INSERT INTO PAYMENT_METHODS (PAYMENT_METHOD_ID, USER_ID, CARD_NUMBER, EXPIRY_DAT
 -- Restart Sequences
 ALTER TABLE USERS ALTER COLUMN USER_ID RESTART WITH 4;
 ALTER TABLE ADDRESSES ALTER COLUMN ADDRESS_ID RESTART WITH 1;
-ALTER TABLE PRODUCTS ALTER COLUMN PRODUCT_ID RESTART WITH 6;
+ALTER TABLE CATEGORIES ALTER COLUMN CATEGORY_ID RESTART WITH 1;
+ALTER TABLE PRODUCTS ALTER COLUMN PRODUCT_ID RESTART WITH 133;
 ALTER TABLE SHOPPING_CART ALTER COLUMN CART_ID RESTART WITH 1;
 ALTER TABLE ORDERS ALTER COLUMN ORDER_ID RESTART WITH 502;
 ALTER TABLE ORDER_ITEMS ALTER COLUMN ITEM_ID RESTART WITH 502;
