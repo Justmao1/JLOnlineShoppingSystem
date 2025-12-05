@@ -232,7 +232,14 @@ public class AdminDashboard extends JPanel {
                 java.io.File imgFile = new java.io.File(p.getImagePath());
                 if (imgFile.exists()) {
                     ImageIcon originalIcon = new ImageIcon(p.getImagePath());
-                    Image img = originalIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                    int iw = originalIcon.getIconWidth();
+                    int ih = originalIcon.getIconHeight();
+                    int maxW = 50;
+                    int maxH = 50;
+                    double r = Math.min((double) maxW / iw, (double) maxH / ih);
+                    int nw = Math.max(1, (int) (iw * r));
+                    int nh = Math.max(1, (int) (ih * r));
+                    Image img = originalIcon.getImage().getScaledInstance(nw, nh, Image.SCALE_SMOOTH);
                     icon = new ImageIcon(img);
                 }
             }

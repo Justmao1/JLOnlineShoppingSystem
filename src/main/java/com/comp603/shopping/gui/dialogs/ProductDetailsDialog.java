@@ -19,16 +19,24 @@ public class ProductDetailsDialog extends JDialog {
         JLabel imageLabel = new JLabel();
         imageLabel.setPreferredSize(new Dimension(250, 300));
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        imageLabel.setVerticalAlignment(SwingConstants.CENTER);
+        imageLabel.setOpaque(false);
         imageLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
         if (product.getImagePath() != null) {
             java.io.File imgFile = new java.io.File(product.getImagePath());
             if (imgFile.exists()) {
                 ImageIcon icon = new ImageIcon(product.getImagePath());
-                Image img = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Keep aspect ratio logic
-                                                                                             // if needed, simple scale
-                                                                                             // for now
+                int iw = icon.getIconWidth();
+                int ih = icon.getIconHeight();
+                int maxW = 250;
+                int maxH = 300;
+                double r = Math.min((double) maxW / iw, (double) maxH / ih);
+                int nw = Math.max(1, (int) (iw * r));
+                int nh = Math.max(1, (int) (ih * r));
+                Image img = icon.getImage().getScaledInstance(nw, nh, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(img));
+                imageLabel.setText("");
             } else {
                 imageLabel.setText("Image not found");
             }
