@@ -50,10 +50,17 @@ public class ProductDetailsDialog extends JDialog {
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
 
         // Name
-        JLabel nameLabel = new JLabel(product.getName());
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        detailsPanel.add(nameLabel);
+        JTextArea nameArea = new JTextArea(product.getName());
+        nameArea.setWrapStyleWord(true);
+        nameArea.setLineWrap(true);
+        nameArea.setEditable(false);
+        nameArea.setOpaque(false);
+        nameArea.setFont(new Font("Arial", Font.BOLD, 24));
+        nameArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+        nameArea.setToolTipText(product.getName());
+        nameArea.setBorder(null);
+        nameArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        detailsPanel.add(nameArea);
         detailsPanel.add(Box.createVerticalStrut(10));
 
         // Price and Sales
