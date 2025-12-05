@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.AbstractCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +53,7 @@ public class CartDialog extends JDialog {
 
         // Renderers and Editors
         cartTable.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
+        cartTable.getColumnModel().getColumn(3).setCellRenderer(new QuantityRenderer());
         cartTable.getColumnModel().getColumn(3).setCellEditor(new QuantityEditor());
         cartTable.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         cartTable.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox()));
@@ -136,80 +139,143 @@ public class CartDialog extends JDialog {
         }
     }
 
-    class QuantityEditor extends DefaultCellEditor {
-        JSpinner spinner;
+    // Panel with [-] [Value] [+]
+    class QuantityPanel extends JPanel {
+        JButton minusBtn;
+        JLabel valueLabel;
+        JButton plusBtn;
+
+        public QuantityPanel() {
+            setLayout(new BorderLayout());
+            setOpaque(true);
+
+            minusBtn = new JButton("-");
+            plusBtn = new JButton("+");
+            valueLabel = new JLabel("0", SwingConstants.CENTER);
+
+            // Style buttons
+            minusBtn.setFocusable(false);
+            plusBtn.setFocusable(false);
+            minusBtn.setPreferredSize(new Dimension(40, 0)); // Fixed width for hit detection
+            plusBtn.setPreferredSize(new Dimension(40, 0));
+
+            add(minusBtn, BorderLayout.WEST);
+            add(valueLabel, BorderLayout.CENTER);
+            add(plusBtn, BorderLayout.EAST);
+        }
+
+        public void setQuantity(int q) {
+            valueLabel.setText(String.valueOf(q));
+        }
+    }
+
+    class QuantityRenderer implements TableCellRenderer {
+        QuantityPanel panel = new QuantityPanel();
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            int q = (value instanceof Integer) ? (Integer) value : 1;
+            panel.setQuantity(q);
+
+            if (isSelected) {
+                panel.setBackground(table.getSelectionBackground());
+                panel.valueLabel.setForeground(table.getSelectionForeground());
+            } else {
+                panel.setBackground(table.getBackground());
+                panel.valueLabel.setForeground(table.getForeground());
+            }
+            return panel;
+        }
+    }
+
+    class QuantityEditor extends AbstractCellEditor implements TableCellEditor {
+        QuantityPanel panel = new QuantityPanel();
+        int currentQuantity;
 
         public QuantityEditor() {
-            super(new JTextField());
-            spinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+            // No listeners needed here as we handle clicks in isCellEditable
         }
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
                 int column) {
-            spinner.setValue(value);
-            return spinner;
+            currentQuantity = (value instanceof Integer) ? (Integer) value : 1;
+            panel.setQuantity(currentQuantity);
+            panel.setBackground(table.getSelectionBackground());
+            return panel;
         }
 
         @Override
         public Object getCellEditorValue() {
-            return spinner.getValue();
+            return currentQuantity;
         }
 
         @Override
-        public boolean stopCellEditing() {
-            int newQuantity = (int) spinner.getValue();
-            int row = cartTable.getSelectedRow();
-            if (row >= 0) {
-                CartItem item = mainFrame.getCart().getItems().get(row);
-                int userId = mainFrame.getAuthService().getCurrentUser().getUserId();
+        public boolean isCellEditable(java.util.EventObject e) {
+            if (e instanceof java.awt.event.MouseEvent) {
+                java.awt.event.MouseEvent me = (java.awt.event.MouseEvent) e;
+                JTable table = (JTable) me.getSource();
+                int row = table.rowAtPoint(me.getPoint());
+                int col = table.columnAtPoint(me.getPoint());
 
-                // Validate Stock
-                int currentStock = item.getProduct().getStockQuantity();
-                // Ideally fetch fresh stock from DB, but for now use Product object which
-                // should be reasonably fresh or refreshed
-                // Let's fetch fresh stock to be safe
-                com.comp603.shopping.dao.ProductDAO productDAO = new com.comp603.shopping.dao.ProductDAO();
-                java.util.List<Product> products = productDAO.searchProducts(item.getProduct().getName()); // Inefficient
-                                                                                                           // but works
-                                                                                                           // for now to
-                                                                                                           // get fresh
-                                                                                                           // object
-                // Better: add getProductById to DAO. But search works if name is unique or we
-                // filter.
-                // Actually, let's just use the product object we have, but maybe we should
-                // refresh it?
-                // The requirement says "Retrieve the current stock... from the database".
-                // I'll assume the Product object in CartItem might be stale if we don't
-                // refresh.
-                // But I don't have getProductById. I'll rely on the Product object for now,
-                // OR I can quickly add getProductById to DAO? No, stick to plan.
-                // Wait, I can use the searchProducts with exact name match or just trust the
-                // object.
-                // Given the constraints, I will use the item.getProduct().getStockQuantity()
-                // but I should probably refresh it.
-                // Let's trust the loaded product for now as we refresh on dashboard load.
+                if (col == 3) { // Quantity column
+                    Rectangle cellRect = table.getCellRect(row, col, true);
+                    Point p = me.getPoint();
 
-                if (newQuantity > currentStock) {
-                    JOptionPane.showMessageDialog(null, "Only " + currentStock + " left in stock!", "Stock Limit",
-                            JOptionPane.WARNING_MESSAGE);
-                    spinner.setValue(currentStock);
-                    newQuantity = currentStock;
+                    // Translate to cell coordinates
+                    int relativeX = p.x - cellRect.x;
+
+                    // Check hit zones (assuming 40px buttons as defined in QuantityPanel)
+                    if (relativeX < 40) {
+                        // Minus Clicked
+                        updateQuantity(row, -1);
+                        return false; // Consume event, don't start editing
+                    } else if (relativeX > cellRect.width - 40) {
+                        // Plus Clicked
+                        updateQuantity(row, 1);
+                        return false; // Consume event, don't start editing
+                    }
                 }
-
-                // Update DB
-                new com.comp603.shopping.dao.ShoppingCartDAO().updateQuantity(userId, item.getProduct().getProductId(),
-                        newQuantity);
-
-                // Update Model
-                item.setQuantity(newQuantity);
-
-                // Refresh Total Column and Label
-                tableModel.setValueAt(String.format("$%.2f", item.getTotalPrice()), row, 4);
-                updateTotalLabel();
-                mainFrame.updateCartCount();
             }
-            return super.stopCellEditing();
+            return false; // Don't allow full editing (typing), just buttons
+        }
+
+        private void updateQuantity(int row, int delta) {
+            if (row < 0 || row >= mainFrame.getCart().getItems().size())
+                return;
+
+            CartItem item = mainFrame.getCart().getItems().get(row);
+            int currentQ = item.getQuantity();
+            int newQ = currentQ + delta;
+
+            if (newQ < 1)
+                return; // Minimum 1
+
+            // Validate Stock
+            int currentStock = item.getProduct().getStockQuantity();
+            // Ideally refresh stock from DB, but using cached for speed/simplicity as per
+            // previous logic
+
+            if (newQ > currentStock) {
+                JOptionPane.showMessageDialog(null, "Only " + currentStock + " left in stock!", "Stock Limit",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Update DB
+            int userId = mainFrame.getAuthService().getCurrentUser().getUserId();
+            new com.comp603.shopping.dao.ShoppingCartDAO().updateQuantity(userId, item.getProduct().getProductId(),
+                    newQ);
+
+            // Update Model
+            item.setQuantity(newQ);
+
+            // Refresh UI
+            tableModel.setValueAt(newQ, row, 3);
+            tableModel.setValueAt(String.format("$%.2f", item.getTotalPrice()), row, 4);
+            updateTotalLabel();
+            mainFrame.updateCartCount();
         }
     }
 
@@ -252,15 +318,16 @@ public class CartDialog extends JDialog {
         public Object getCellEditorValue() {
             if (isPushed) {
                 int row = cartTable.getSelectedRow();
-                CartItem item = mainFrame.getCart().getItems().get(row);
-                int userId = mainFrame.getAuthService().getCurrentUser().getUserId();
+                if (row >= 0 && row < mainFrame.getCart().getItems().size()) {
+                    CartItem item = mainFrame.getCart().getItems().get(row);
 
-                // Remove from DB
-                mainFrame.getCart().removeProduct(item.getProduct());
+                    // Remove from DB
+                    mainFrame.getCart().removeProduct(item.getProduct());
 
-                // Refresh UI
-                refreshCart();
-                mainFrame.updateCartCount();
+                    // Refresh UI
+                    refreshCart();
+                    mainFrame.updateCartCount();
+                }
             }
             isPushed = false;
             return label;
