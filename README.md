@@ -11,6 +11,8 @@ A comprehensive desktop-based Online Shopping System commissioned for the **COMP
 ## 1. Title and Overview
 
 ### **JL Online Shopping System**
+![TODO: Main Dashboard Screenshot](screenshots/main_dashboard.png)
+
 The **JL Online Shopping System** is a robust Java Swing application designed to simulate a real-world e-commerce platform. It seamlessly connects Customers with Products through an intuitive interface, backed by a persistent embedded database.
 
 **Key Goals:**
@@ -34,10 +36,17 @@ This application supports two distinct user roles: **Customer** and **Admin**, e
     *   **Search & Filter**: Find products by name or category.
     *   **Shopping Cart**: Add items, update quantities, and remove items with real-time total calculation.
     *   **Wishlist**: Save items for later.
+
+    ![TODO: Product Browsing and Cart Screenshot](screenshots/product_browsing.png)
 *   **Checkout System**:
     *   Multiple Payment Methods: **Credit Card** and **Digital Wallet**.
     *   Order History: View past orders and status.
+
+    ![TODO: Checkout Dialog Screenshot](screenshots/checkout.png)
+
 *   **Admin Dashboard**: comprehensive view of all products and system status.
+
+    ![TODO: Admin Dashboard Screenshot](screenshots/admin_dashboard.png)
 
 ### **Complexity & Usability:**
 *   **Robust Error Handling**: The application is designed to never crash. Invalid inputs (e.g., negative text in price fields, SQL injection attempts) are caught and handled with user-friendly error messages (pop-ups). IOExceptions and SQLExceptions are logged and managed gracefully.
@@ -163,10 +172,10 @@ The project uses the **JUnit 5 Framework** to ensure reliability. Over 5 critica
 
 | Student ID | Name | Contribution |
 | :--- | :--- | :--- |
-| **[Student ID]** | **Justmao1** | **Core Architecture**: Implemented the main Checkout flow, Wallet system, and Product List panel. Integrated Payment System and handled major refactoring. |
-| **[Student ID]** | **Changpeng Shi** | **Database & Assets**: Managed `schema.sql`, database seeding, and product assets. Implemented product filtering/sorting. |
-| **[Student ID]** | **fhhhz-todd** | **GUI Customization**: Implemented custom Cart Dialog, improved layouts, and JTable rendering. |
-| **[Student ID]** | **kekepepe** | **User Management**: Implemented Registration Dialog, Header panel refactoring, and client-side validation. |
+| **25305764** | **ZhekaiMao** | **Core Architecture**: Implemented the main Checkout flow, Wallet system, and Product List panel. Integrated Payment System and handled major refactoring. |
+| **25307126** | **Changpeng Shi** | **Database & Assets**: Managed `schema.sql`, database seeding, and product assets. Implemented product filtering/sorting. |
+| **25307952** | **Haozhe Feng** | **GUI Customization**: Implemented custom Cart Dialog, improved layouts, and JTable rendering. |
+| **25307695** | **Peng Ke** | **User Management**: Implemented Registration Dialog, Header panel refactoring, and client-side validation. |
 
 *(Please see the attached `contribution.pdf` for full details)*
 
