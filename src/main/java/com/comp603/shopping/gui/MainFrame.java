@@ -236,7 +236,8 @@ public class MainFrame extends JFrame {
 
             categoryButton = new JButton("ALL ▼");
             categoryMenu = new JPopupMenu();
-            String[] categories = new String[] { "All", "Books", "Sports & Outdoors", "Electronics", "CDs", "Clothing" };
+            String[] categories = new String[] { "All", "Books", "Sports & Outdoors", "Electronics", "CDs",
+                    "Clothing" };
             for (String c : categories) {
                 JMenuItem item = new JMenuItem(c);
                 item.addActionListener(e -> applyCategory(c));
@@ -246,7 +247,7 @@ public class MainFrame extends JFrame {
                 categoryMenu.show(categoryButton, 0, categoryButton.getHeight());
             });
 
-            JPanel searchGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            JPanel searchGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
             searchGroup.setOpaque(false);
             searchGroup.add(categoryButton);
             searchGroup.add(searchField);
