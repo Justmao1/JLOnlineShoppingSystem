@@ -130,7 +130,7 @@ public class ProductListPanel extends JPanel {
         sortPanel.setBackground(Color.WHITE);
 
         JLabel sortByLabel = new JLabel("Sort by:");
-        JComboBox<String> sortByCombo = new JComboBox<>(new String[] { "Price", "Sales Volume" });
+        JComboBox<String> sortByCombo = new JComboBox<>(new String[] { "Default", "Price", "Sales Volume" });
         JComboBox<String> orderCombo = new JComboBox<>(new String[] { "Ascending", "Descending" });
         JButton sortButton = new JButton("Apply Sort");
 
@@ -153,6 +153,7 @@ public class ProductListPanel extends JPanel {
                     case "Sales Volume":
                         currentSortBy = "SALES_VOLUME";
                         break;
+                    case "Default":
                     default:
                         currentSortBy = "PRODUCT_ID"; // Default
                         break;
