@@ -62,6 +62,7 @@ public class MainFrame extends JFrame {
         // 控制HeaderPanel中的认证按钮显示/隐藏
         if ("LOGIN".equals(cardName)) {
             headerPanel.showAuthButtons(false);
+            headerPanel.setSearchVisible(false); // Hide search on login
             // Clear login form when showing login panel
             for (Component comp : mainPanel.getComponents()) {
                 if (comp instanceof LoginPanel) {
@@ -71,6 +72,7 @@ public class MainFrame extends JFrame {
             }
         } else {
             headerPanel.showAuthButtons(true);
+            headerPanel.setSearchVisible(true); // Show search elsewhere
         }
     }
 
@@ -177,13 +179,13 @@ public class MainFrame extends JFrame {
 
     // Inner Class for Header
     private class HeaderPanel extends JPanel {
-        private JLabel welcomeLabel;
         private JButton cartButton;
         private JTextField searchField;
         private JButton categoryButton;
         private JPopupMenu categoryMenu;
         private JButton loginButton;
         private JButton myAccountButton;
+        private JPanel searchGroup;
 
         public HeaderPanel() {
             setLayout(new BorderLayout());
@@ -213,25 +215,11 @@ public class MainFrame extends JFrame {
 
             // Search components
             searchField = new JTextField(18);
-            searchField.setText("Type here to search");
-            searchField.setForeground(Color.GRAY);
-            searchField.addFocusListener(new java.awt.event.FocusAdapter() {
-                @Override
-                public void focusGained(java.awt.event.FocusEvent e) {
-                    if (searchField.getText().equals("Type here to search")) {
-                        searchField.setText("");
-                        searchField.setForeground(Color.BLACK);
-                    }
-                }
-
-                @Override
-                public void focusLost(java.awt.event.FocusEvent e) {
-                    if (searchField.getText().isEmpty()) {
-                        searchField.setText("Type here to search");
-                        searchField.setForeground(Color.GRAY);
-                    }
-                }
-            });
+            // Search components
+            searchField = new JTextField(18);
+            searchField.setText("");
+            searchField.setForeground(Color.BLACK);
+            // Removed FocusListener for placeholder text
             JButton searchButton = new JButton("Search");
 
             categoryButton = new JButton("ALL ▼");
@@ -247,7 +235,7 @@ public class MainFrame extends JFrame {
                 categoryMenu.show(categoryButton, 0, categoryButton.getHeight());
             });
 
-            JPanel searchGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+            searchGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
             searchGroup.setOpaque(false);
             searchGroup.add(categoryButton);
             searchGroup.add(searchField);
@@ -262,10 +250,7 @@ public class MainFrame extends JFrame {
             JPanel rightActionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
             rightActionPanel.setOpaque(false);
 
-            welcomeLabel = new JLabel("Welcome");
-            welcomeLabel.setForeground(Color.WHITE);
-            welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            welcomeLabel.setVisible(false); // Hide by default in guest mode
+            // Removed Welcome Label creation
 
             cartButton = new JButton("View Cart (0)");
             cartButton.setBackground(new Color(255, 165, 0)); // Orange
@@ -281,7 +266,8 @@ public class MainFrame extends JFrame {
             myAccountButton.setVisible(false); // Hidden by default in guest mode
 
             // Add components in strict order: Welcome -> Cart -> Auth (Login/MyAccount)
-            rightActionPanel.add(welcomeLabel);
+            // Add components
+            // rightActionPanel.add(welcomeLabel); // Removed welcome label
             rightActionPanel.add(cartButton);
             rightActionPanel.add(loginButton);
             rightActionPanel.add(myAccountButton);
@@ -291,14 +277,14 @@ public class MainFrame extends JFrame {
             // Search Actions
             searchButton.addActionListener(e -> {
                 String text = searchField.getText().trim();
-                if (!text.equals("Type here to search") && !text.isEmpty()) {
+                if (!text.isEmpty()) {
                     performSearch(text);
                 }
             });
 
             searchField.addActionListener(e -> {
                 String text = searchField.getText().trim();
-                if (!text.equals("Type here to search") && !text.isEmpty()) {
+                if (!text.isEmpty()) {
                     performSearch(text);
                 }
             });
@@ -315,8 +301,8 @@ public class MainFrame extends JFrame {
         }
 
         public void updateUser(String username) {
-            welcomeLabel.setText("Welcome, " + username);
-            welcomeLabel.setVisible(true);
+            // welcomeLabel.setText("Welcome, " + username); // Removed welcome text update
+            // welcomeLabel.setVisible(true); // Removed visibility update
             loginButton.setVisible(false); // Hide login button when user logs in
             myAccountButton.setVisible(true);
         }
@@ -326,7 +312,7 @@ public class MainFrame extends JFrame {
         }
 
         public void resetToGuestMode() {
-            welcomeLabel.setVisible(false);
+            // welcomeLabel.setVisible(false);
             loginButton.setVisible(true); // Show login button in guest mode
             cartButton.setText("View Cart (0)");
             myAccountButton.setVisible(false);
@@ -336,14 +322,16 @@ public class MainFrame extends JFrame {
             cartButton.setVisible(show);
             loginButton.setVisible(show && !isLoggedIn()); // Only show login when not logged in
             myAccountButton.setVisible(show && isLoggedIn());
-            welcomeLabel.setVisible(show && isLoggedIn());
+            // welcomeLabel.setVisible(show && isLoggedIn());
         }
 
         public void clearSearchField() {
             searchField.setText("");
-            if (!searchField.isFocusOwner()) {
-                searchField.setText("Type here to search");
-                searchField.setForeground(Color.GRAY);
+        }
+
+        public void setSearchVisible(boolean visible) {
+            if (searchGroup != null) {
+                searchGroup.setVisible(visible);
             }
         }
     }
