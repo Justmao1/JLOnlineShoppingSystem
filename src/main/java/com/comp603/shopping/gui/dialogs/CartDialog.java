@@ -301,7 +301,7 @@ public class CartDialog extends JDialog {
     class ButtonEditor extends DefaultCellEditor {
         protected JButton button;
         private String label;
-        private boolean isPushed;
+        private int editingRow;
 
         public ButtonEditor(JCheckBox checkBox) {
             super(checkBox);
@@ -310,6 +310,19 @@ public class CartDialog extends JDialog {
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     fireEditingStopped();
+                    // Perform removal logic deferred to avoid conflict with table editing state
+                    SwingUtilities.invokeLater(() -> {
+                        if (editingRow >= 0 && editingRow < mainFrame.getCart().getItems().size()) {
+                            CartItem item = mainFrame.getCart().getItems().get(editingRow);
+
+                            // Remove from DB
+                            mainFrame.getCart().removeProduct(item.getProduct());
+
+                            // Refresh UI
+                            refreshCart();
+                            mainFrame.updateCartCount();
+                        }
+                    });
                 }
             });
         }
@@ -318,30 +331,15 @@ public class CartDialog extends JDialog {
                 int column) {
             label = (value == null) ? "" : value.toString();
             button.setText(label);
-            isPushed = true;
+            editingRow = row;
             return button;
         }
 
         public Object getCellEditorValue() {
-            if (isPushed) {
-                int row = cartTable.getSelectedRow();
-                if (row >= 0 && row < mainFrame.getCart().getItems().size()) {
-                    CartItem item = mainFrame.getCart().getItems().get(row);
-
-                    // Remove from DB
-                    mainFrame.getCart().removeProduct(item.getProduct());
-
-                    // Refresh UI
-                    refreshCart();
-                    mainFrame.updateCartCount();
-                }
-            }
-            isPushed = false;
             return label;
         }
 
         public boolean stopCellEditing() {
-            isPushed = false;
             return super.stopCellEditing();
         }
     }
