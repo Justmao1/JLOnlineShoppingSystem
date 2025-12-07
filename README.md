@@ -166,9 +166,9 @@ The project uses the **JUnit 5 Framework** to ensure reliability. Over 5 critica
 
 | Student ID | Name | Contribution |
 | :--- | :--- | :--- |
-| **25305764** | **Zhekai Mao** | **Core Architecture**: Implemented the main Checkout flow, Wallet system, and Product List panel. Integrated Payment System and handled major refactoring. |
-| **25307126** | **Changpeng Shi** | **Database & Assets**: Managed `schema.sql`, database seeding, and product assets. Implemented product filtering/sorting. |
-| **25307952** | **Haozhe Feng** | **GUI Customization**: Implemented custom Cart Dialog, improved layouts, and JTable rendering. |
-| **25307695** | **Peng Ke** | **User Management**: Implemented Registration Dialog, Header panel refactoring, and client-side validation. |
+| **25305764** | **Zhekai Mao** | ** Core Architecture**: Implemented the main Checkout flow, Wallet system, and Product List panel. Integrated Payment System and handled major build. |
+| **25307695** | **Peng Ke** | ** User & Admin Management**: Implemented Registration Dialog, Header panel building, client-side validation, and the Admin Dashboard for product CRUD. |
+| **25307952** | **Haozhe Feng** | ** GUI Customization**: Implemented custom Cart Dialog, improved layouts, JTable rendering, and product filtering/sorting. |
+| **25307126** | **Changpeng Shi** | ** Database & Coding**: Managed `schema.sql`, database seeding, and product assets. Implemented `DBManager` (Singleton) and `Product` model. |
 
 *(Please see the attached `contribution.pdf` for full details)*
